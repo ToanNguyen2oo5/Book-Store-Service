@@ -25,7 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {"/kh",
-            "/auth/token", "/auth/introspect","/quan-huyen"
+            "/auth/token", "/auth/introspect","/quan-huyen","/kh/{maKH}","/tinh"
     };
 
     @Value("${jwt.signerKey}")
@@ -34,20 +34,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated());
 
-        /*httpSecurity.oauth2ResourceServer(oauth2 ->
+        httpSecurity.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt(jwtConfigurer ->
                         jwtConfigurer.decoder(jwtDecoder())
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-        );*/
+        );
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
     }
 
-    /*@Bean
+    @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter(){
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
@@ -70,5 +70,5 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
-    }*/
+    }
 }

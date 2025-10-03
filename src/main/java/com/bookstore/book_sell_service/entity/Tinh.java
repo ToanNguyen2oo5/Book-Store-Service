@@ -23,6 +23,7 @@ public class Tinh {
     private String tenTinh;
 
     @OneToMany(mappedBy = "tinh")
+    @JsonIgnore
     private List<QuanHuyen> quanHuyenList;
 
 }

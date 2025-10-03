@@ -33,12 +33,12 @@ import java.util.Date;
 public class AuthenticationService {
     KhachHangRepository khachHangRepository;
     @NonFinal
-    public static final String SIGNER_KEY="P0tyURkKeWibpDngDqFE49le/abhx9LzFP7/MCjPB93d+qJXNh16VPfaIghBSUp3";
+    public static final String SIGNER_KEY="1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij";
 
     public IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException {
         var token =request.getToken();
-        JWSVerifier verifier = null;
+        JWSVerifier verifier ;
 
             verifier = new MACVerifier(SIGNER_KEY.getBytes());
 

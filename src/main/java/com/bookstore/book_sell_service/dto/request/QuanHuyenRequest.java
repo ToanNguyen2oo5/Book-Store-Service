@@ -9,4 +9,5 @@ import lombok.*;
 public class QuanHuyenRequest {
 
     private String tenQuanHuyen;
+    private Long maTinh;
 }

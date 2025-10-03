@@ -8,9 +8,12 @@ import com.bookstore.book_sell_service.entity.QuanHuyen;
 import com.bookstore.book_sell_service.mapper.UserMapper;
 import com.bookstore.book_sell_service.repositories.KhachHangRepository;
 import com.bookstore.book_sell_service.repositories.QuanHuyenRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -25,12 +28,14 @@ public class KhachHangService {
     KhachHangRepository khachHangRepository;
     UserMapper userMapper;
 
-
+    @Transactional
     public  KhachHang createKhachHang(KhachHangCreationRequest request){
-        QuanHuyen quanHuyen = quanHuyenRepository.findByTenQuanHuyen(request.getMaQuanHuyen())
+        QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
                 .orElseThrow(() -> new RuntimeException("QuanHuyen not found"));
         KhachHang khachHang=userMapper.toUser(request);
         khachHang.setQuanHuyen(quanHuyen);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         return khachHangRepository.save(khachHang);
     }
 
@@ -45,10 +50,12 @@ public class KhachHangService {
     }
 
     public KHResponse updateKH(String maKH, KhachHangUpdateRequest request){
-        KhachHang user =khachHangRepository.findById(maKH)
+        KhachHang khachHang =khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
-        userMapper.updateKH(user,request);
-        return userMapper.toKHResponse(khachHangRepository.save(user));
+        userMapper.updateKH(khachHang,request);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+        return userMapper.toKHResponse(khachHangRepository.save(khachHang));
     }
 
     public void deleteKH(String maKH){

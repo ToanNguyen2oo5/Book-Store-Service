@@ -35,5 +35,5 @@ public class KhachHangCreationRequest {
     private String email;
     private String soDT;
     private String diaChi;
-    private String maQuanHuyen;
+    private Long maQuanHuyen;
 }
