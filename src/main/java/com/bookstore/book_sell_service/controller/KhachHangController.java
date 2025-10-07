@@ -31,17 +31,24 @@ public class KhachHangController {
     }
 
     @GetMapping
-    public List<KHResponse> getAllKhachHangs(){
-        return khachHangService.getAllKhachHangs();
+    public ApiResponse<List<KHResponse>> getAllKhachHangs(){
+        return ApiResponse.<List<KHResponse>>builder()
+                .result(khachHangService.getAllKhachHangs())
+                .build();
     }
+
     @GetMapping("/{maKH}")
-    public KhachHang getKhachHang(@PathVariable String maKH){
-        return khachHangService.getKhachHang(maKH);
+    public ApiResponse<KhachHang> getKhachHang(@PathVariable String maKH){
+        return ApiResponse.<KhachHang>builder()
+                .result(khachHangService.getKhachHang(maKH))
+                .build();
     }
 
     @PutMapping("/{maKH}")
-    KHResponse updateUser(@PathVariable String maKH, @RequestBody @Valid KhachHangUpdateRequest request ){
-        return khachHangService.updateKH(maKH,request);
+    ApiResponse<KHResponse> updateUser(@PathVariable String maKH, @RequestBody @Valid KhachHangUpdateRequest request ){
+        return ApiResponse.<KHResponse>builder()
+                .result(khachHangService.updateKH(maKH,request))
+                .build();
     }
     @DeleteMapping("/{maKH}")
     String deleteUser(@PathVariable String maKH){

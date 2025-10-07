@@ -8,7 +8,6 @@ import com.bookstore.book_sell_service.entity.QuanHuyen;
 import com.bookstore.book_sell_service.mapper.UserMapper;
 import com.bookstore.book_sell_service.repositories.KhachHangRepository;
 import com.bookstore.book_sell_service.repositories.QuanHuyenRepository;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,7 +27,6 @@ public class KhachHangService {
     KhachHangRepository khachHangRepository;
     UserMapper userMapper;
 
-    @Transactional
     public  KhachHang createKhachHang(KhachHangCreationRequest request){
         QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
                 .orElseThrow(() -> new RuntimeException("QuanHuyen not found"));
