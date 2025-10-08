@@ -2,10 +2,15 @@ package com.bookstore.book_sell_service.services;
 
 import com.bookstore.book_sell_service.dto.request.AuthenticationRequest;
 import com.bookstore.book_sell_service.dto.request.IntrospectRequest;
+import com.bookstore.book_sell_service.dto.request.LogOut_Refresh.LogoutRequest;
+import com.bookstore.book_sell_service.dto.request.LogOut_Refresh.RefreshRequest;
 import com.bookstore.book_sell_service.dto.responses.AuthenticationResponse;
 import com.bookstore.book_sell_service.dto.responses.IntrospectResponse;
+import com.bookstore.book_sell_service.entity.InvalidateToken;
+import com.bookstore.book_sell_service.entity.KhachHang;
 import com.bookstore.book_sell_service.exception.AppException;
 import com.bookstore.book_sell_service.exception.ErrorCode;
+import com.bookstore.book_sell_service.repositories.InvalidatedTokenRepository;
 import com.bookstore.book_sell_service.repositories.KhachHangRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -17,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +32,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -33,10 +40,19 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true )
 public class AuthenticationService {
     KhachHangRepository khachHangRepository;
-
+    InvalidatedTokenRepository invalidatedTokenRepository;
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
+
+    @NonFinal
+    @Value("${jwt.valid-duration}")
+    protected long VALID_DURATION;
+
+    @NonFinal
+    @Value("${jwt.refreshable-duration}")
+    protected long REFRESH_DURATION;
+
 
     public IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException {
@@ -72,6 +88,47 @@ public class AuthenticationService {
 
     }
 
+    public void logout(LogoutRequest request)  throws ParseException, JOSEException{
+        try {
+            var signJWT = verifyToken(request.getToken(),true);
+
+            String jit = signJWT.getJWTClaimsSet().getJWTID();
+            var expiryTime = signJWT.getJWTClaimsSet().getExpirationTime();
+
+            InvalidateToken invalidateToken =
+                    InvalidateToken.builder().id(jit).expiryTime(expiryTime).build();
+
+            invalidatedTokenRepository.save(invalidateToken);
+
+        } catch (AppException exception){
+            log.info("Token already expired");
+        }
+    }
+
+    public AuthenticationResponse refreshToken (RefreshRequest request) throws ParseException, JOSEException {
+        var signJWT = verifyToken(request.getToken(), true);
+
+        var jit = signJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidateToken invalidatedTToken =
+                InvalidateToken.builder().id(jit).expiryTime(expiryTime).build();
+
+        var username = signJWT.getJWTClaimsSet().getSubject();
+
+        var user =
+                khachHangRepository.findByHoTen(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
+
+    }
+
+
     private SignedJWT verifyToken(String token , boolean isRefresh) throws JOSEException, ParseException {
 
         // tao verify xac thuc chu ky token
@@ -79,7 +136,14 @@ public class AuthenticationService {
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
-        Date expotyTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        Date expotyTime = (isRefresh) ?
+                new Date(signedJWT
+                        .getJWTClaimsSet()
+                        .getIssueTime()
+                        .toInstant()
+                        .plus(REFRESH_DURATION,ChronoUnit.SECONDS)
+                        .toEpochMilli())
+                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(jwsVerifier);
 
@@ -90,13 +154,14 @@ public class AuthenticationService {
 
     }
 
-    private String generateToken(String username){
+    private String generateToken(KhachHang khachHang){
         JWSHeader jwsHeader= new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(khachHang.getHoTen())
                 .issuer("stewie.vn")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .expirationTime(new Date(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
+                .jwtID(UUID.randomUUID().toString())
                 .claim("CustomClaims","Custom ")
                 .build();
 
