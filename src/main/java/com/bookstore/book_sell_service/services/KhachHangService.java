@@ -61,4 +61,5 @@ public class KhachHangService {
     public void deleteKH(String maKH){
         khachHangRepository.deleteById(maKH);
     }
+
 }
