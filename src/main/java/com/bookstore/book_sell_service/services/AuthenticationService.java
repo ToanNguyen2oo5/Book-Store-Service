@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,8 +33,10 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true )
 public class AuthenticationService {
     KhachHangRepository khachHangRepository;
+
     @NonFinal
-    public static final String SIGNER_KEY="1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij";
+    @Value("${jwt.signerKey}")
+    protected String SIGNER_KEY;
 
     public IntrospectResponse introspect(IntrospectRequest request)
             throws JOSEException, ParseException {
@@ -66,6 +69,24 @@ public class AuthenticationService {
                 .token(token)
                 .authenticated(true)
                 .build();
+
+    }
+
+    private SignedJWT verifyToken(String token , boolean isRefresh) throws JOSEException, ParseException {
+
+        // tao verify xac thuc chu ky token
+        JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY);
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expotyTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var verified = signedJWT.verify(jwsVerifier);
+
+        if (!(verified && expotyTime.after(new Date()))) throw  new AppException(ErrorCode.UNAUTHENTICATED);
+
+        return signedJWT;
+
 
     }
 
