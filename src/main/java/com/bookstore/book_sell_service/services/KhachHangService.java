@@ -8,10 +8,11 @@ import com.bookstore.book_sell_service.entity.QuanHuyen;
 import com.bookstore.book_sell_service.mapper.UserMapper;
 import com.bookstore.book_sell_service.repositories.KhachHangRepository;
 import com.bookstore.book_sell_service.repositories.QuanHuyenRepository;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class KhachHangService {
     KhachHangRepository khachHangRepository;
     UserMapper userMapper;
 
-    @Transactional
+
     public  KhachHang createKhachHang(KhachHangCreationRequest request){
         QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
                 .orElseThrow(() -> new RuntimeException("QuanHuyen not found"));
@@ -38,12 +39,12 @@ public class KhachHangService {
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         return khachHangRepository.save(khachHang);
     }
-
+    @PostAuthorize("returnObject.hoTen == authentication.name")
     public KhachHang getKhachHang(@PathVariable  String maKH){
         return khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public List<KHResponse> getAllKhachHangs(){
     return khachHangRepository.findAll().stream().
                 map(userMapper::toKHResponse).collect(Collectors.toList());

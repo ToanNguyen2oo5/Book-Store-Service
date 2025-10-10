@@ -1,10 +1,10 @@
 package com.bookstore.book_sell_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "KHACH_HANG")
@@ -23,6 +23,7 @@ public class KhachHang {
     //@Column(unique = true)
     private String soDT;
     private String diaChi;
+    private Set<String> roles;
 
     @ManyToOne
     @JoinColumn(name = "maQuanHuyen")
