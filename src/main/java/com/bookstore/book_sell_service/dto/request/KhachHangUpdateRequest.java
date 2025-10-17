@@ -1,6 +1,7 @@
 package com.bookstore.book_sell_service.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -32,6 +33,7 @@ public class KhachHangUpdateRequest {
     private String matKhau;
     @Email(message = "INVALID_EMAIL")
     private String email;
+    @Column(nullable = false, unique = true)
     private String soDT;
     private String diaChi;
     private String tenQuanHuyen;

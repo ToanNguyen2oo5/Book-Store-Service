@@ -2,6 +2,7 @@ package com.bookstore.book_sell_service.dto.request;
 
 import com.bookstore.book_sell_service.entity.QuanHuyen;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -24,6 +25,8 @@ public class KhachHangCreationRequest {
           message = "INVALID_USERNAME"
   )
     private String hoTen;
+    @Column(nullable = false, unique = true)
+    private String userName;
     @Size(min=8,message = "INVALID_PASSWORD")
     @NotBlank(message = "BLANK_PASSWORD")
     @Pattern(
@@ -33,6 +36,7 @@ public class KhachHangCreationRequest {
     private String matKhau;
     @Email(message = "INVALID_EMAIL")
     private String email;
+    @Column(nullable = false, unique = true)
     private String soDT;
     private String diaChi;
     private Long maQuanHuyen;

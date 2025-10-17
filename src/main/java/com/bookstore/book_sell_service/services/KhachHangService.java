@@ -34,6 +34,7 @@ public class KhachHangService {
         QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
                 .orElseThrow(() -> new RuntimeException("QuanHuyen not found"));
         KhachHang khachHang=userMapper.toUser(request);
+        khachHang.setUserName(request.getUserName());
         khachHang.setQuanHuyen(quanHuyen);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));

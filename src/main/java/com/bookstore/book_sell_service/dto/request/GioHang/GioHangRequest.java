@@ -1,4 +1,5 @@
-package com.bookstore.book_sell_service.dto.request;
+package com.bookstore.book_sell_service.dto.request.GioHang;
+
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-    String userName;
-    String matKhau;
+public class GioHangRequest {
+     Long maSach;
+//     Integer soLuong;
 }

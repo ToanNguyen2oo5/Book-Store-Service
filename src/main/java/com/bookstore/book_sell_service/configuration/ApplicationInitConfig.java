@@ -23,11 +23,11 @@ public class ApplicationInitConfig {
     @Bean
     ApplicationRunner applicationRunner(KhachHangRepository khachHangRepository){
     return args -> {
-        if(khachHangRepository.findByHoTen("admin").isEmpty()){
+        if(khachHangRepository.findByuserName("admin").isEmpty()){
         var roles = new HashSet<String>();
         roles.add("ADMIN");
             KhachHang khachHang = KhachHang.builder()
-                    .hoTen("admin")
+                    .userName("admin")
                     .matKhau(passwordEncoder.encode("admin"))
                     .roles(roles)
                     .build();

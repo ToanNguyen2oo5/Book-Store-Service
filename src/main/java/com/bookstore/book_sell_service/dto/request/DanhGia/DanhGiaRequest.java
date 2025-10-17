@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class DanhGiaRequest {
 
     private Long maKH;
+    private Long maSach;
     private Integer soSao;
     private String binhLuan;
-
 }

@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,8 +39,9 @@ public class DonHang {
     @JoinColumn(name = "maPTTT")
     private PhuongThucThanhToan phuongThucThanhToan;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "maKH")
+    @JsonBackReference
     private KhachHang khachHang;
 
     @ManyToOne

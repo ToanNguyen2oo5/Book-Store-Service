@@ -1,11 +1,13 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,10 +21,18 @@ public class GioHang {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long maGioHang;
 
-    @ManyToOne
-    @JoinColumn(name = "maKH")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maKH", referencedColumnName = "maKH")
+    @JsonManagedReference
     private KhachHang khachHang;
 
-    @OneToMany(mappedBy = "gioHang")
-    private List<ChiTietGioHang> chiTietGioHangList;
+    @OneToMany(
+            mappedBy = "gioHang",
+            cascade = CascadeType.ALL,  // ← Thêm cascade
+            orphanRemoval = true,        // ← Thêm orphanRemoval
+            fetch = FetchType.LAZY       // ← Thêm lazy fetch
+    )
+    @Builder.Default
+    private List<ChiTietGioHang> chiTietGioHangList = new ArrayList<>();
+
 }

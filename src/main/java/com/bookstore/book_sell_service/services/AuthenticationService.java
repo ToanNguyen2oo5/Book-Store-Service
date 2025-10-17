@@ -74,7 +74,7 @@ public class AuthenticationService {
     }
 
    public AuthenticationResponse authenticate(AuthenticationRequest request){
-    var user =khachHangRepository.findByHoTen(request.getHoTen())
+    var user =khachHangRepository.findByuserName(request.getUserName())
             .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         boolean authenticated= passwordEncoder.matches(request.getMatKhau(), user.getMatKhau());
@@ -116,7 +116,7 @@ public class AuthenticationService {
 
         var username = signJWT.getJWTClaimsSet().getSubject();
 
-        var user = khachHangRepository.findByHoTen(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var user = khachHangRepository.findByuserName(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
 
@@ -156,7 +156,7 @@ public class AuthenticationService {
     private String generateToken(KhachHang khachHang){
         JWSHeader jwsHeader= new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(khachHang.getHoTen())
+                .subject(khachHang.getUserName())
                 .issuer("stewie.vn")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
