@@ -1,6 +1,8 @@
 package com.bookstore.book_sell_service.services;
 
+import com.bookstore.book_sell_service.dto.request.GioHang.GioHangDelete;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangRequest;
+import com.bookstore.book_sell_service.dto.request.GioHang.GioHangUpdate;
 import com.bookstore.book_sell_service.entity.*;
 import com.bookstore.book_sell_service.exception.AppException;
 import com.bookstore.book_sell_service.exception.ErrorCode;
@@ -27,6 +29,8 @@ public class GioHangService {
     ChiTietGioHangRepository chiTietGioHangRepository;
     KhachHangRepository khachHangRepository;
     SachRepository sachRepository;
+    AuthenticationService authenticationService;
+
 
     @Transactional
     public GioHang addSachGioHang(GioHangRequest request) {
@@ -66,13 +70,68 @@ public class GioHangService {
                     .id(chiTietId)  // ← QUAN TRỌNG: Phải set ID
                     .gioHang(gioHang)
                     .sach(sach)
-                    .soLuongMua(2)
+                    .soLuongMua(1)
                     .build();
 
             chiTietGioHangRepository.save(newChiTiet);
+        } else {
+            ChiTietGioHang chiTietGioHang = chiTietOptional.get();
+            chiTietGioHang.setSoLuongMua(chiTietGioHang.getSoLuongMua() + 1);
         }
-
         return gioHangRepository.findById(gioHang.getMaGioHang())
                 .orElseThrow(() -> new RuntimeException("Giỏ hàng không tìm thấy"));
+    }
+
+    @Transactional
+    public void updateSoLuong (GioHangUpdate gioHangUpdate){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        KhachHang user = khachHangRepository.findByuserName(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Lấy sách
+        Sach sach = sachRepository.findById(gioHangUpdate.getMaSach())
+                .orElseThrow(() -> new RuntimeException("Loi ko tim thay sach"));
+
+        GioHang gioHang = gioHangRepository.findByKhachHang_UserName(userName)
+                .orElseThrow(() -> new RuntimeException("Ko tim thay gio hang"));
+
+        ChiTietGioHang chiTietGioHang = chiTietGioHangRepository.findByGioHangAndSach(gioHang,sach)
+                .orElseThrow(() -> new RuntimeException("Ko tim thay "));
+
+        if (gioHangUpdate.getAction().equalsIgnoreCase("INCREASE")){
+            chiTietGioHang.setSoLuongMua(chiTietGioHang.getSoLuongMua() + 1);
+        }
+        else {
+            Integer soLuong = chiTietGioHang.getSoLuongMua();
+            if (soLuong > 1){
+                chiTietGioHang.setSoLuongMua(chiTietGioHang.getSoLuongMua() - 1);
+                chiTietGioHangRepository.save(chiTietGioHang);
+
+            }
+            else {
+                chiTietGioHangRepository.deleteByGioHangAndSach(gioHang,sach);
+            }
+
+        }
+    }
+
+    @Transactional
+    public void deleteSach(GioHangDelete gioHangDelete){
+
+
+        KhachHang user = authenticationService.khachHang();
+
+        Sach sach = sachRepository.findById(gioHangDelete.getMaSach())
+                .orElseThrow(() -> new RuntimeException("Loi ko tim thay sach"));
+
+        GioHang gioHang = gioHangRepository.findByKhachHang_UserName(user.getUserName())
+                .orElseThrow(() -> new RuntimeException("Ko tim thay gio hang"));
+
+        ChiTietGioHang chiTietGioHang = chiTietGioHangRepository.findByGioHangAndSach(gioHang,sach)
+                .orElseThrow(() -> new RuntimeException("Ko tim thay "));
+
+        chiTietGioHangRepository.deleteByGioHangAndSach(gioHang,sach);
     }
 }
