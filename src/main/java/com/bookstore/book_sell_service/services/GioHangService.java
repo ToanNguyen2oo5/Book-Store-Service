@@ -33,7 +33,7 @@ public class GioHangService {
 
 
     @Transactional
-    public GioHang addSachGioHang(GioHangRequest request) {
+    public void addSachGioHang(GioHangRequest request) {
         // Lấy thông tin user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
@@ -78,7 +78,7 @@ public class GioHangService {
             ChiTietGioHang chiTietGioHang = chiTietOptional.get();
             chiTietGioHang.setSoLuongMua(chiTietGioHang.getSoLuongMua() + 1);
         }
-        return gioHangRepository.findById(gioHang.getMaGioHang())
+         gioHangRepository.findById(gioHang.getMaGioHang())
                 .orElseThrow(() -> new RuntimeException("Giỏ hàng không tìm thấy"));
     }
 

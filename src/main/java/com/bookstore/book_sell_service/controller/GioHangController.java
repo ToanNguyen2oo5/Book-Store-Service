@@ -23,11 +23,10 @@ public class GioHangController {
     GioHangService gioHangService;
 
     @PostMapping("/addGH")
-    public ApiResponse<GioHang> gioHangApiResponse (@RequestBody GioHangRequest request){
-        GioHang gioHang = gioHangService.addSachGioHang(request);
-        return  ApiResponse.<GioHang>builder()
+    public ApiResponse<Void> gioHangApiResponse (@RequestBody GioHangRequest request){
+        gioHangService.addSachGioHang(request);
+        return  ApiResponse.<Void>builder()
                 .message("oko")
-                .result(gioHang)
                 .build();
     }
     @PutMapping ("/update-soluong")
