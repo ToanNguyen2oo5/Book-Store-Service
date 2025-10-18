@@ -8,9 +8,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class GioHangUpdate {
+public class GioHangDelete {
     Long maSach;
-    // action INCREASE → tăng số lượng
-//     action = DECREASE → giảm số lượng
-    String action;
 }

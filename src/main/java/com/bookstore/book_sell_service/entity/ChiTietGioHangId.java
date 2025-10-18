@@ -10,10 +10,8 @@ import java.util.Objects;
 @Embeddable
 @Data
 public class ChiTietGioHangId implements Serializable {
-//    @Column(name = "ma_gio_hang")
     private Long maGioHang;
 
-//    @Column(name = "ma_sach")
     private Long maSach;
 
     public ChiTietGioHangId(){
