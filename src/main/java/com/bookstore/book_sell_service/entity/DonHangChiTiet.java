@@ -21,12 +21,12 @@ public class DonHangChiTiet {
 
     @ManyToOne
     @MapsId("maDonHang")
-    @JoinColumn(name = "maDonHang")
+    @JoinColumn(name = "ma_don_hang")
     private DonHang donHang;
 
     @ManyToOne
     @MapsId("maSach")
-    @JoinColumn(name = "maSach")
+    @JoinColumn(name = "ma_sach")
     private Sach sach;
 
     public DonHangChiTietId getId() {

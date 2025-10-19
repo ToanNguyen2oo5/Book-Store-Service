@@ -43,5 +43,6 @@ public class KhachHang {
     private List<DanhGia> danhGiaList;
 
     @OneToMany(mappedBy = "khachHang")
+    @JsonManagedReference
     private List<DonHang> donHangList;
 }
