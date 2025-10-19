@@ -12,4 +12,6 @@ public interface ChiTietGioHangRepository extends JpaRepository<ChiTietGioHang, 
     Optional<ChiTietGioHang> findByGioHangAndSach(GioHang gioHang, Sach sach);
 
     void deleteByGioHangAndSach(GioHang gioHang, Sach sach);
+
+    void deleteByGioHang_MaGioHang(Long maGioHang);
 }
