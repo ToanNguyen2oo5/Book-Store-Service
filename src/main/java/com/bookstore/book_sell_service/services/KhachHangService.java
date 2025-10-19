@@ -1,10 +1,12 @@
 package com.bookstore.book_sell_service.services;
 
-import com.bookstore.book_sell_service.dto.request.KhachHangCreationRequest;
-import com.bookstore.book_sell_service.dto.request.KhachHangUpdateRequest;
+import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangCreationRequest;
+import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.entity.KhachHang;
 import com.bookstore.book_sell_service.entity.QuanHuyen;
+import com.bookstore.book_sell_service.exception.AppException;
+import com.bookstore.book_sell_service.exception.ErrorCode;
 import com.bookstore.book_sell_service.mapper.UserMapper;
 import com.bookstore.book_sell_service.repositories.KhachHangRepository;
 import com.bookstore.book_sell_service.repositories.QuanHuyenRepository;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +31,7 @@ public class KhachHangService {
     QuanHuyenRepository quanHuyenRepository;
     KhachHangRepository khachHangRepository;
     UserMapper userMapper;
-
+    PasswordEncoder passwordEncoder;
 
     public  KhachHang createKhachHang(KhachHangCreationRequest request){
         QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
@@ -40,11 +43,13 @@ public class KhachHangService {
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         return khachHangRepository.save(khachHang);
     }
+
     @PostAuthorize("returnObject.hoTen == authentication.name")
     public KhachHang getKhachHang(@PathVariable  String maKH){
         return khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public List<KHResponse> getAllKhachHangs(){
     return khachHangRepository.findAll().stream().
@@ -54,8 +59,7 @@ public class KhachHangService {
     public KHResponse updateKH(String maKH, KhachHangUpdateRequest request){
         KhachHang khachHang =khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
-        userMapper.updateKH(khachHang,request);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        userMapper.updateKH(khachHang, request);
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         return userMapper.toKHResponse(khachHangRepository.save(khachHang));
     }
@@ -64,4 +68,11 @@ public class KhachHangService {
         khachHangRepository.deleteById(maKH);
     }
 
+    public KHResponse getMyInfo(){
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+        KhachHang khachHang = khachHangRepository.findByUserName(name).orElseThrow(
+                ()-> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return userMapper.toKHResponse(khachHang);
+    }
 }

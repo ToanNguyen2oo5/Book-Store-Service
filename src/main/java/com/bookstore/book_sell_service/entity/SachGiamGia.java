@@ -7,16 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "SACH_DANH_GIA")
+@Table(name = "SACH_GIAM_GIA")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SachDanhGia {
+public class SachGiamGia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Integer soLuongApDungGiamGia;
 
     @ManyToOne

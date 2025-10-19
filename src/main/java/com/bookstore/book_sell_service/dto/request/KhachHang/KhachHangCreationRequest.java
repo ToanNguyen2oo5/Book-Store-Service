@@ -1,6 +1,5 @@
-package com.bookstore.book_sell_service.dto.request;
+package com.bookstore.book_sell_service.dto.request.KhachHang;
 
-import com.bookstore.book_sell_service.entity.QuanHuyen;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;

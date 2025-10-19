@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "NHAN_VIEN")
@@ -22,7 +23,7 @@ public class NhanVien {
     private String matKhau;
     private String hoTen;
     private String soCCCD;
-    private String quyen;
+    private Set<String> roles;
 
     @OneToMany(mappedBy = "nhanVien")
     private List<DonHang> donHangList;

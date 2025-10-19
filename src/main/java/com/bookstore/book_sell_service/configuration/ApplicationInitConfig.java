@@ -23,7 +23,7 @@ public class ApplicationInitConfig {
     @Bean
     ApplicationRunner applicationRunner(KhachHangRepository khachHangRepository){
     return args -> {
-        if(khachHangRepository.findByuserName("admin").isEmpty()){
+        if(khachHangRepository.findByUserName("admin").isEmpty()){
         var roles = new HashSet<String>();
         roles.add("ADMIN");
             KhachHang khachHang = KhachHang.builder()

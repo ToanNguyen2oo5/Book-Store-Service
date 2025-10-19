@@ -29,6 +29,6 @@ public class GiamGia {
     private List<DonHang> donHangList;
 
     @OneToMany(mappedBy = "giamGia")
-    private List<SachDanhGia> sachDanhGiaList;
+    private List<SachGiamGia> sachGiamGiaList;
 
 }

@@ -76,7 +76,7 @@ public class AuthenticationService {
     }
 
    public AuthenticationResponse authenticate(AuthenticationRequest request){
-    var user =khachHangRepository.findByuserName(request.getUserName())
+    var user =khachHangRepository.findByUserName(request.getUserName())
             .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         boolean authenticated= passwordEncoder.matches(request.getMatKhau(), user.getMatKhau());
@@ -118,7 +118,7 @@ public class AuthenticationService {
 
         var username = signJWT.getJWTClaimsSet().getSubject();
 
-        var user = khachHangRepository.findByuserName(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var user = khachHangRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
 
@@ -188,7 +188,7 @@ public class AuthenticationService {
     public KhachHang khachHang () {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        return khachHangRepository.findByuserName(userName)
+        return khachHangRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 }

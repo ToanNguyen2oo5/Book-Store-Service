@@ -1,8 +1,8 @@
 package com.bookstore.book_sell_service.controller;
 
 import com.bookstore.book_sell_service.dto.request.ApiResponse;
-import com.bookstore.book_sell_service.dto.request.KhachHangCreationRequest;
-import com.bookstore.book_sell_service.dto.request.KhachHangUpdateRequest;
+import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangCreationRequest;
+import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.entity.KhachHang;
 import com.bookstore.book_sell_service.services.KhachHangService;
@@ -61,5 +61,13 @@ public class KhachHangController {
     String deleteUser(@PathVariable String maKH){
         khachHangService.deleteKH(maKH);
         return "KH has been deleted";
+    }
+
+    @GetMapping("/myInfo")
+    ApiResponse<KHResponse> getMyInfo(){
+        return ApiResponse.<KHResponse>builder()
+                .code(100)
+                .result(khachHangService.getMyInfo())
+                .build();
     }
 }

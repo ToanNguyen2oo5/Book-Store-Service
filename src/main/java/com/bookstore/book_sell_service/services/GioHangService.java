@@ -38,7 +38,7 @@ public class GioHangService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        KhachHang user = khachHangRepository.findByuserName(userName)
+        KhachHang user = khachHangRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         // Lấy sách
@@ -87,7 +87,7 @@ public class GioHangService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        KhachHang user = khachHangRepository.findByuserName(userName)
+        KhachHang user = khachHangRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         // Lấy sách

@@ -1,7 +1,7 @@
 package com.bookstore.book_sell_service.mapper;
 
-import com.bookstore.book_sell_service.dto.request.KhachHangCreationRequest;
-import com.bookstore.book_sell_service.dto.request.KhachHangUpdateRequest;
+import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangCreationRequest;
+import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.entity.KhachHang;
 

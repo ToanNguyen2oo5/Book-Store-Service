@@ -1,4 +1,4 @@
-package com.bookstore.book_sell_service.dto.request;
+package com.bookstore.book_sell_service.dto.request.KhachHang;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Column;

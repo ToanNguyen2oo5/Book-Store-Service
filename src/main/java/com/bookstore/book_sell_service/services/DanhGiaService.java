@@ -34,7 +34,7 @@ public class DanhGiaService {
 
         String userName =  authentication.getName();
 
-        KhachHang khachHang = khachHangRepository.findByuserName(userName)
+        KhachHang khachHang = khachHangRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Sach sach = sachRepository.findById(danhGiaRequest.getMaSach())
