@@ -35,18 +35,15 @@ public class GioHangService {
     @Transactional
     public void addSachGioHang(GioHangRequest request) {
         // Lấy thông tin user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
 
-        KhachHang user = khachHangRepository.findByUserName(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        KhachHang user = authenticationService.khachHang();
 
         // Lấy sách
         Sach sach = sachRepository.findById(request.getMaSach())
                 .orElseThrow(() -> new RuntimeException("Loi ko tim thay sach"));
 
         // Tìm hoặc tạo giỏ hàng
-        GioHang gioHang = gioHangRepository.findByKhachHang_UserName(userName)
+        GioHang gioHang = gioHangRepository.findByKhachHang_UserName(user.getUserName())
                 .orElseGet(() -> {
                     GioHang newGioHang = new GioHang();
                     newGioHang.setKhachHang(user);
@@ -84,17 +81,15 @@ public class GioHangService {
 
     @Transactional
     public void updateSoLuong (GioHangUpdate gioHangUpdate){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
 
-        KhachHang user = khachHangRepository.findByUserName(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        KhachHang user = authenticationService.khachHang();
+
 
         // Lấy sách
         Sach sach = sachRepository.findById(gioHangUpdate.getMaSach())
                 .orElseThrow(() -> new RuntimeException("Loi ko tim thay sach"));
 
-        GioHang gioHang = gioHangRepository.findByKhachHang_UserName(userName)
+        GioHang gioHang = gioHangRepository.findByKhachHang_UserName(user.getUserName())
                 .orElseThrow(() -> new RuntimeException("Ko tim thay gio hang"));
 
         ChiTietGioHang chiTietGioHang = chiTietGioHangRepository.findByGioHangAndSach(gioHang,sach)

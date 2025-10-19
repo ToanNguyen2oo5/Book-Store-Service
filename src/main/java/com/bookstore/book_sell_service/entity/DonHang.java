@@ -30,7 +30,7 @@ public class DonHang {
     private Double phiGiaoHang;
     private String trangThai;
     private LocalDate ngayDat;
-
+    private double tongTien;
     @ManyToOne
     @JoinColumn(name = "maQuanHuyen")
     private QuanHuyen quanHuyen;
@@ -39,7 +39,7 @@ public class DonHang {
     @JoinColumn(name = "maPTTT")
     private PhuongThucThanhToan phuongThucThanhToan;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "maKH")
     @JsonBackReference
     private KhachHang khachHang;
@@ -54,5 +54,6 @@ public class DonHang {
 
     @OneToMany(mappedBy = "donHang")
     private List<DonHangChiTiet> chiTietDonHangList;
+
 
 }
