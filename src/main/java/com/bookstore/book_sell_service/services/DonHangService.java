@@ -29,6 +29,7 @@ public class DonHangService {
     PTTTRepository ptttRepository;
     DonHangRepository donHangRepository;
     ChiTietDHRepository chiTietDHRepository;
+    private final GioHangRepository gioHangRepository;
 
     @Transactional // Thêm transaction để đảm bảo tính toàn vẹn dữ liệu
     public void createDonHang(DonHangCreate request) {
@@ -117,8 +118,11 @@ public class DonHangService {
         chiTietDHRepository.saveAll(chiTietDonHangList);
 
         // Xóa giỏ hàng
-        chiTietGioHangRepository.deleteAll(chiTietGioHangList);
+        GioHang gioHang = khachHang.getGioHang();
 
-        // KHÔNG CẦN save lần 2 nữa
+        gioHang.getChiTietGioHangList().clear();
+        chiTietGioHangRepository.deleteByGioHang_MaGioHang(gioHang.getMaGioHang());
+
+        gioHangRepository.save(gioHang);
     }
 }
