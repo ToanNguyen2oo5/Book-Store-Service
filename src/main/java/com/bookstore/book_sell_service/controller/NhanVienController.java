@@ -59,4 +59,10 @@ public class NhanVienController {
                 .result(nhanVienService.updateNhanVien(maNV,request))
                 .build();
     }
+
+    @DeleteMapping("/{maNV}")
+    String deleteNhanVien(@PathVariable Long maNV){
+        nhanVienService.deleteNhanVien(maNV);
+        return "NV has been deleted";
+    }
 }
