@@ -1,22 +1,32 @@
 package com.bookstore.book_sell_service.services;
 
 import com.bookstore.book_sell_service.dto.request.DonHang.DonHangCreate;
+import com.bookstore.book_sell_service.dto.request.DonHang.UpdateTrangThai;
+import com.bookstore.book_sell_service.dto.responses.DHResponse;
+import com.bookstore.book_sell_service.dto.responses.ThongKeResponse;
 import com.bookstore.book_sell_service.entity.*;
+import com.bookstore.book_sell_service.enums.TrangThai;
 import com.bookstore.book_sell_service.mapper.DonHangMapper;
 import com.bookstore.book_sell_service.repositories.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Builder
 public class DonHangService {
 
     AuthenticationService authenticationService;
@@ -30,6 +40,7 @@ public class DonHangService {
     DonHangRepository donHangRepository;
     ChiTietDHRepository chiTietDHRepository;
     private final GioHangRepository gioHangRepository;
+
 
     @Transactional // Thêm transaction để đảm bảo tính toàn vẹn dữ liệu
     public void createDonHang(DonHangCreate request) {
@@ -88,7 +99,7 @@ public class DonHangService {
             donHang.setGiamGia(giamGia);
         }
 
-        donHang.setTrangThai("Cho xac nhan");
+        donHang.setTrangThai(TrangThai.CHO_XAC_NHAN.getMoTa());
         donHang.setTongTien(tongTien);
 
         // QUAN TRỌNG: Lưu đơn hàng chỉ 1 LẦN trước khi tạo chi tiết
@@ -125,4 +136,31 @@ public class DonHangService {
 
         gioHangRepository.save(gioHang);
     }
+
+    // lay danh sach cac don hang tu admin
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<DHResponse> getALLDonHang(){
+        return donHangMapper.togetAllDH(donHangRepository.findAll());
+    }
+    // xem chi tiet don hang
+    @PreAuthorize("hasRole('ADMIN')")
+    public DHResponse getDonHang(Long maDH){
+        return donHangMapper.togetDH(donHangRepository.findById(maDH)
+                .orElseThrow(() -> new RuntimeException("Ko tim thay")));
+    }
+
+    // cap nhat trang thai don hang
+    @PreAuthorize("hasRole('ADMIN')")
+    public void updateTrangThai(UpdateTrangThai updateTrangThai)
+    {
+        DonHang donHang =  donHangRepository.findById(updateTrangThai.getMaDonHang())
+                .orElseThrow(() -> new RuntimeException("Ko tim thay don hang"));
+
+        TrangThai tt = TrangThai.valueOf(updateTrangThai.getTrangThaiMoi());
+        donHang.setTrangThai(tt.getMoTa());
+
+        donHangRepository.save(donHang);
+    }
+
+
 }

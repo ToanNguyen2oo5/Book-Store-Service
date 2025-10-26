@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 
 import jakarta.persistence.*;
@@ -23,6 +24,8 @@ public class PhuongThucThanhToan {
 
     private String tenPTTT;
 
+
     @OneToMany(mappedBy = "phuongThucThanhToan")
+    @JsonIgnore
     private List<DonHang> donHangList;
 }

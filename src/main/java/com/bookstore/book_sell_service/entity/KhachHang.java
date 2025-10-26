@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -35,7 +36,8 @@ public class KhachHang {
 //    cascade = CascadeType.ALL: các thao tác (lưu, xóa,...) trên KhachHang sẽ được áp dụng cho GioHang.
 //    fetch = FetchType.LAZY: chỉ tải giỏ hàng khi được yêu cầu.
     @OneToOne(mappedBy = "khachHang", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference(value = "khachhang-giohang")
+
     private GioHang gioHang;
 
     @OneToMany(mappedBy = "khachHang")
@@ -43,6 +45,6 @@ public class KhachHang {
     private List<DanhGia> danhGiaList;
 
     @OneToMany(mappedBy = "khachHang")
-    @JsonManagedReference
+    @JsonIgnore
     private List<DonHang> donHangList;
 }
