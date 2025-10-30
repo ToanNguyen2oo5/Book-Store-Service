@@ -19,8 +19,8 @@ public class SachService {
 
     // get all sach theo khoang gia hoac sap xep theo gia giam dan hay tang dan
     public List<Sach> getAllSachs(SachFilterRequest request){
-
         return sachRepository.findAll
                 (SachSpecification.filterByPrice(request.getMinPrice(),request.getMaxPrice(),request.getOrderBy(),request.getOrder()));
     }
+
 }

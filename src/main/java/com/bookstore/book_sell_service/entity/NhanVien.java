@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,5 +27,6 @@ public class NhanVien {
     private Set<String> roles;
 
     @OneToMany(mappedBy = "nhanVien")
+    @JsonIgnore
     private List<DonHang> donHangList;
 }

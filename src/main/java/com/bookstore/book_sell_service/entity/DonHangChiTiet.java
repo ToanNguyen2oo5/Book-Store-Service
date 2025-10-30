@@ -1,5 +1,7 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +29,7 @@ public class DonHangChiTiet {
     @ManyToOne
     @MapsId("maSach")
     @JoinColumn(name = "ma_sach")
+    @JsonIgnore
     private Sach sach;
 
     public DonHangChiTietId getId() {

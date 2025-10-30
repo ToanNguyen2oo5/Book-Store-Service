@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,8 @@ public class GioHang {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maKH", referencedColumnName = "maKH")
-    @JsonManagedReference
+    @JsonBackReference(value = "khachhang-giohang")
+
     private KhachHang khachHang;
 
     @OneToMany(

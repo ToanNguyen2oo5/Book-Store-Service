@@ -1,6 +1,7 @@
 package com.bookstore.book_sell_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,7 +42,8 @@ public class DonHang {
 
     @ManyToOne
     @JoinColumn(name = "maKH")
-    @JsonBackReference
+    @JsonBackReference(value = "khachhang-donhang")
+
     private KhachHang khachHang;
 
     @ManyToOne
@@ -53,6 +55,7 @@ public class DonHang {
     private GiamGia giamGia;
 
     @OneToMany(mappedBy = "donHang")
+    @JsonManagedReference
     private List<DonHangChiTiet> chiTietDonHangList;
 
 
