@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(value= Exception.class)
-//    ResponseEntity<ApiResponse> handlingRunTimeException(RuntimeException exception){
-//        ApiResponse apiResponse=new ApiResponse();
-//        apiResponse.setCode(ErrorCode.UNCATEGORIZED_ERROR.getCode());
-//        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_ERROR.getMessage());
-//
-//        return ResponseEntity.badRequest().body(apiResponse);
-//    }
+    @ExceptionHandler(value= Exception.class)
+    ResponseEntity<ApiResponse> handlingRunTimeException(RuntimeException exception){
+       ApiResponse apiResponse=new ApiResponse();
+        apiResponse.setCode(ErrorCode.UNCATEGORIZED_ERROR.getCode());
+        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_ERROR.getMessage());
+
+        return ResponseEntity.badRequest().body(apiResponse);
+       }
     @ExceptionHandler(value= AppException.class)
     ResponseEntity<ApiResponse> handlingAppException(AppException exception){
         ErrorCode errorCode= exception.getErrorCode();
@@ -53,6 +53,12 @@ public class GlobalExceptionHandler {
 
     }
 
-
-
+    /*@ExceptionHandler(value = MethodArgumentNotValidException.class)
+    ResponseEntity<ApiResponse> handlingMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+        ErrorCode errorCode=ErrorCode.INVALID_REQUEST;
+        return ResponseEntity.status(errorCode.getStatusCode()).body(ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build());
+    }*/
 }

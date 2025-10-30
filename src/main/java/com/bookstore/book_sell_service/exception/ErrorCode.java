@@ -16,6 +16,7 @@ public enum ErrorCode {
     BLANK_PASSWORD(107,"password must not be blank",HttpStatus.BAD_REQUEST),
     INVALID_EMAIL(108,"invalid email",HttpStatus.BAD_REQUEST),
     UNAUTHORIZED(109,"you do not have permission",HttpStatus.FORBIDDEN),
+    INVALID_REQUEST(110,"invalid request",HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

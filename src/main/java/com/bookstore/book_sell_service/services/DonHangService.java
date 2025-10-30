@@ -83,7 +83,7 @@ public class DonHangService {
 
         donHang.setNhanVien(nhanVienRepository.findById(request.getMaNV())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên")));
-
+        donHang.setNgayDat(LocalDate.now());
         if (giamGia != null) {
             donHang.setGiamGia(giamGia);
         }

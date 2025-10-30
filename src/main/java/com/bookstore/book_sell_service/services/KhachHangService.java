@@ -5,11 +5,13 @@ import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdateRequ
 import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.entity.KhachHang;
 import com.bookstore.book_sell_service.entity.QuanHuyen;
+import com.bookstore.book_sell_service.entity.Tinh;
 import com.bookstore.book_sell_service.exception.AppException;
 import com.bookstore.book_sell_service.exception.ErrorCode;
 import com.bookstore.book_sell_service.mapper.UserMapper;
 import com.bookstore.book_sell_service.repositories.KhachHangRepository;
 import com.bookstore.book_sell_service.repositories.QuanHuyenRepository;
+import com.bookstore.book_sell_service.repositories.TinhRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class KhachHangService {
+    TinhRepository tinhRepository;
     QuanHuyenRepository quanHuyenRepository;
     KhachHangRepository khachHangRepository;
     UserMapper userMapper;
