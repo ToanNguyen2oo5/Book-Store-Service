@@ -1,6 +1,7 @@
 package com.bookstore.book_sell_service.services;
 
 import com.bookstore.book_sell_service.dto.request.DanhGia.DanhGiaRequest;
+import com.bookstore.book_sell_service.dto.responses.DanhGiaResponse;
 import com.bookstore.book_sell_service.entity.DanhGia;
 import com.bookstore.book_sell_service.entity.KhachHang;
 import com.bookstore.book_sell_service.entity.Sach;
@@ -17,6 +18,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -26,7 +31,7 @@ public class DanhGiaService {
     DanhGiaRepository danhGiaRepository;
     SachRepository sachRepository;
 
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     public DanhGia createDanhGia(DanhGiaRequest danhGiaRequest){
 
 
@@ -43,13 +48,20 @@ public class DanhGiaService {
         DanhGia danhGia = new DanhGia();
         danhGia.setSoSao(danhGiaRequest.getSoSao());
         danhGia.setBinhLuan(danhGiaRequest.getBinhLuan());
+        danhGia.setNgayBL(LocalDate.now());
         danhGia.setKhachHang(khachHang);
         danhGia.setSach(sach);
 
         return danhGiaRepository.save(danhGia);
-
-
-
-
     }
+//    @PreAuthorize("hasRole('STAFF')")
+    public List<DanhGiaResponse> getAll(){
+       return danhGiaRepository.findALLDanhGia();
+    }
+//    @PreAuthorize("hasRole('STAFF')")
+    public void deleteBL(Long maDanhGia)
+    {
+        danhGiaRepository.deleteById(maDanhGia);
+    }
+
 }
