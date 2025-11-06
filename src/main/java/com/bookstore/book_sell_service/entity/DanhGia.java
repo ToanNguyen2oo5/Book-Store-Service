@@ -1,10 +1,13 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "DANH_GIA")
@@ -19,6 +22,7 @@ public class DanhGia {
 
     private Integer soSao;
     private String binhLuan;
+    private LocalDate ngayBL;
 
     @ManyToOne
     @JoinColumn(name = "maSP")
@@ -26,5 +30,6 @@ public class DanhGia {
 
     @ManyToOne
     @JoinColumn(name = "maKH")
+    @JsonIgnore
     private KhachHang khachHang;
 }

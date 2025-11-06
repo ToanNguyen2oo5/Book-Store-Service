@@ -10,7 +10,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DanhGiaRequest {
 
-    private Long maKH;
+
+    private String maKH;
     private Long maSach;
     private Integer soSao;
     private String binhLuan;

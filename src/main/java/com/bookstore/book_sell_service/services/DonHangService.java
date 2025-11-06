@@ -101,6 +101,7 @@ public class DonHangService {
 
         donHang.setTrangThai(TrangThai.CHO_XAC_NHAN.getMoTa());
         donHang.setTongTien(tongTien);
+        donHang.setNgayDat(LocalDate.now());
 
         // QUAN TRỌNG: Lưu đơn hàng chỉ 1 LẦN trước khi tạo chi tiết
         donHang = donHangRepository.save(donHang);
