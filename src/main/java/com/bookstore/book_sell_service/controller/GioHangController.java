@@ -5,7 +5,6 @@ import com.bookstore.book_sell_service.dto.request.ApiResponse;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangDelete;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangRequest;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangUpdate;
-import com.bookstore.book_sell_service.entity.GioHang;
 import com.bookstore.book_sell_service.services.GioHangService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

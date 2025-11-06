@@ -12,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,13 +54,13 @@ public class KhachHangController {
     }
 
     @PutMapping("/{maKH}")
-    ApiResponse<KHResponse> updateUser(@PathVariable String maKH, @RequestBody @Valid KhachHangUpdateRequest request ){
+    public ApiResponse<KHResponse> updateUser(@PathVariable String maKH, @RequestBody @Valid KhachHangUpdateRequest request ){
         return ApiResponse.<KHResponse>builder()
                 .result(khachHangService.updateKH(maKH,request))
                 .build();
     }
     @DeleteMapping("/{maKH}")
-    String deleteUser(@PathVariable String maKH){
+    public String deleteUser(@PathVariable String maKH){
         khachHangService.deleteKH(maKH);
         return "KH has been deleted";
     }

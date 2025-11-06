@@ -15,6 +15,8 @@ import com.bookstore.book_sell_service.repositories.TinhRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +57,7 @@ public class KhachHangService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<KHResponse> getAllKhachHangs(){
-    return khachHangRepository.findAll().stream().
+        return khachHangRepository.findAll().stream().
                 map(userMapper::toKHResponse).collect(Collectors.toList());
     }
 

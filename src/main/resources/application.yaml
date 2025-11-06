@@ -4,6 +4,8 @@ server:
     context-path: /store
 
 spring:
+  elasticsearch:
+    uris: http://localhost:9200 # Địa chỉ server Elasticsearch của bạn
   datasource:
     url: "jdbc:mysql://localhost:3306/bookstore"
     username: root

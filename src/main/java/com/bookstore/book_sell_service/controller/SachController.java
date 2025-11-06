@@ -3,6 +3,8 @@ package com.bookstore.book_sell_service.controller;
 import com.bookstore.book_sell_service.dto.request.ApiResponse;
 import com.bookstore.book_sell_service.dto.request.Sach.SachFilterRequest;
 import com.bookstore.book_sell_service.entity.Sach;
+import com.bookstore.book_sell_service.search.SachDocument;
+import com.bookstore.book_sell_service.services.SachSearchService;
 import com.bookstore.book_sell_service.services.SachService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.List;
 public class SachController {
 
     SachService sachService;
-
+    SachSearchService sachSearchService;
     @PostMapping ("/request-sach")
     public ApiResponse<List<Sach>> getAllSachs(@RequestBody SachFilterRequest request){
         List<Sach> sachList = sachService.getAllSachs(request);
@@ -28,4 +30,24 @@ public class SachController {
                 .build();
     }
 
+    @GetMapping("/suggest")
+    public ApiResponse<List<SachDocument>> suggestSach(@RequestParam String term) {
+        List<SachDocument> results = sachSearchService.searchAutocomplete(term);
+        return ApiResponse.<List<SachDocument>>builder()
+                .message("Kết quả gợi ý cho: " + term)
+                .result(results)
+                .build();
+    }
+
+    /**
+     * API Tìm kiếm chính (Fuzzy) - Ví dụ: /kh/search?term=toiet
+     */
+    @GetMapping("/search")
+    public ApiResponse<List<SachDocument>> searchSach(@RequestParam String term) {
+        List<SachDocument> results = sachSearchService.searchFuzzy(term);
+        return ApiResponse.<List<SachDocument>>builder()
+                .message("Kết quả tìm kiếm cho: " + term)
+                .result(results)
+                .build();
+    }
 }
