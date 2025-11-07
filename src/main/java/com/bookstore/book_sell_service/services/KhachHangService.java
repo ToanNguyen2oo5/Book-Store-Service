@@ -60,7 +60,10 @@ public class KhachHangService {
         KhachHang khachHang =khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
         userMapper.updateKH(khachHang, request);
+        QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
+                        .orElseThrow(() -> new RuntimeException("KO tim thay"));
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+        khachHang.setQuanHuyen(quanHuyen);
         return userMapper.toKHResponse(khachHangRepository.save(khachHang));
     }
 

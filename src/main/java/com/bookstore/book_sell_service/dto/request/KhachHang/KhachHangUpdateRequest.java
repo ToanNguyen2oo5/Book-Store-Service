@@ -36,5 +36,5 @@ public class KhachHangUpdateRequest {
     @Column(nullable = false, unique = true)
     private String soDT;
     private String diaChi;
-    private String tenQuanHuyen;
+    private Long maQuanHuyen;
 }
