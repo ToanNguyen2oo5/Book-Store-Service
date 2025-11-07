@@ -2,6 +2,8 @@ package com.bookstore.book_sell_service.controller;
 
 import com.bookstore.book_sell_service.dto.request.ApiResponse;
 import com.bookstore.book_sell_service.dto.request.Sach.SachFilterRequest;
+import com.bookstore.book_sell_service.dto.request.Sach.SachUpdateRequest;
+import com.bookstore.book_sell_service.dto.responses.SachResponse;
 import com.bookstore.book_sell_service.entity.Sach;
 import com.bookstore.book_sell_service.search.SachDocument;
 import com.bookstore.book_sell_service.services.SachSearchService;
@@ -49,5 +51,25 @@ public class SachController {
                 .message("Kết quả tìm kiếm cho: " + term)
                 .result(results)
                 .build();
+    }
+
+    @GetMapping("/{maSach}")
+    public ApiResponse<SachResponse> getSach(@PathVariable Long maSach){
+        return ApiResponse.<SachResponse>builder()
+                .result(sachService.getSach(maSach))
+                .build();
+    }
+
+    @PutMapping("/{maSach}")
+    public ApiResponse<SachResponse> updateSach(@PathVariable Long maSach,@RequestBody SachUpdateRequest request){
+        return ApiResponse.<SachResponse>builder()
+                .result(sachService.updateSach(request, maSach))
+                .build();
+    }
+
+    @DeleteMapping("/{maSach}")
+    public String deleteSach(@PathVariable Long maSach){
+        sachService.deleteSach(maSach);
+        return "book has been deleted";
     }
 }

@@ -1,6 +1,7 @@
 package com.bookstore.book_sell_service.configuration;
 
 import com.bookstore.book_sell_service.entity.KhachHang;
+import com.bookstore.book_sell_service.enums.Role;
 import com.bookstore.book_sell_service.repositories.KhachHangRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class ApplicationInitConfig {
     return args -> {
         if(khachHangRepository.findByUserName("admin").isEmpty()){
         var roles = new HashSet<String>();
-        roles.add("ADMIN");
+        roles.add(Role.ADMIN.name());
             KhachHang khachHang = KhachHang.builder()
                     .userName("admin")
                     .matKhau(passwordEncoder.encode("admin"))

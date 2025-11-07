@@ -47,15 +47,15 @@ public class KhachHangController {
     }
 
     @GetMapping("/{maKH}")
-    public ApiResponse<KhachHang> getKhachHang(@PathVariable String maKH){
-        return ApiResponse.<KhachHang>builder()
+    public ApiResponse<KHResponse> getKhachHang(@PathVariable String maKH){
+        return ApiResponse.<KHResponse>builder()
                 .result(khachHangService.getKhachHang(maKH))
                 .build();
     }
 
     @PutMapping("/{maKH}")
-    public ApiResponse<KHResponse> updateUser(@PathVariable String maKH, @RequestBody @Valid KhachHangUpdateRequest request ){
-        return ApiResponse.<KHResponse>builder()
+    public ApiResponse<KhachHang> updateUser(@PathVariable String maKH, @RequestBody @Valid KhachHangUpdateRequest request ){
+        return ApiResponse.<KhachHang>builder()
                 .result(khachHangService.updateKH(maKH,request))
                 .build();
     }
