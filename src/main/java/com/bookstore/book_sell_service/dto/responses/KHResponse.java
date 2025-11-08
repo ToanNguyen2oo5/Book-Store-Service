@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,4 +21,5 @@ public class KHResponse {
     private String diaChi;
     private String tenQuanHuyen;
     private String tenTinh;
+    private Set<String> roles;
     }

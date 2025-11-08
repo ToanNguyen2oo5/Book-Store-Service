@@ -1,30 +1,20 @@
 package com.bookstore.book_sell_service.entity;
 
 import jakarta.persistence.Embeddable;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 @Embeddable
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class DonHangChiTietId implements Serializable {
     private Long maDonHang;
     private Long maSach;
 
-    public DonHangChiTietId(Long maDonHang, Long maSach) {
-    }
 
-    public Long getMaDonHang() {
-        return maDonHang;
-    }
-    public void setMaDonHang(Long maDonHang) {
-        this.maDonHang = maDonHang;
-    }
-    public Long getMaSach() {
-        return maSach;
-    }
-    public void setMaSach(Long maSach) {
-        this.maSach = maSach;
-    }
 }

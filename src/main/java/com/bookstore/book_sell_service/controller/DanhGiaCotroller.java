@@ -32,7 +32,7 @@ public class DanhGiaCotroller {
     @GetMapping
     public ApiResponse<List<DanhGiaResponse>> getAll(){
         return ApiResponse.<List<DanhGiaResponse>>builder()
-                .result(danhGiaService.getAll())
+                .result(danhGiaService.getAllDanhGia())
                 .build();
     }
     @DeleteMapping("/{maDanhGia}")

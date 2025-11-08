@@ -5,6 +5,7 @@ import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdateRequ
 import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.entity.KhachHang;
 import com.bookstore.book_sell_service.entity.QuanHuyen;
+import com.bookstore.book_sell_service.enums.Role;
 import com.bookstore.book_sell_service.exception.AppException;
 import com.bookstore.book_sell_service.exception.ErrorCode;
 import com.bookstore.book_sell_service.mapper.UserMapper;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,9 @@ public class KhachHangService {
         QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
                 .orElseThrow(() -> new RuntimeException("QuanHuyen not found"));
         KhachHang khachHang=userMapper.toUser(request);
+        var roles = new HashSet<String>();
+        roles.add(Role.USER.name());
+        khachHang.setRoles(roles);
         khachHang.setUserName(request.getUserName());
         khachHang.setQuanHuyen(quanHuyen);
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));

@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,9 +30,8 @@ public class DanhGiaService {
     DanhGiaRepository danhGiaRepository;
     SachRepository sachRepository;
 
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     public DanhGia createDanhGia(DanhGiaRequest danhGiaRequest){
-
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -54,11 +52,11 @@ public class DanhGiaService {
 
         return danhGiaRepository.save(danhGia);
     }
-//    @PreAuthorize("hasRole('STAFF')")
-    public List<DanhGiaResponse> getAll(){
+    @PreAuthorize("hasRole('STAFF')")
+    public List<DanhGiaResponse> getAllDanhGia(){
        return danhGiaRepository.findALLDanhGia();
     }
-//    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasRole('STAFF')")
     public void deleteBL(Long maDanhGia)
     {
         danhGiaRepository.deleteById(maDanhGia);
