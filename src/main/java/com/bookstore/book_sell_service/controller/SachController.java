@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-@RequestMapping("/kh")
+@RequestMapping("/sach")
 public class SachController {
 
     SachService sachService;

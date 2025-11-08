@@ -1,11 +1,7 @@
 package com.bookstore.book_sell_service.dto.request.KhachHang;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,17 +15,21 @@ import lombok.NoArgsConstructor;
 public class KhachHangUpdateRequest {
 
     private String hoTen;
-    @Size(min=8,message = "INVALID_PASSWORD")
+    
+    @Size(min=8, message = "INVALID_PASSWORD")
     @NotBlank(message = "BLANK_PASSWORD")
-    //@Pattern(
-    //        regexp = "^(?=.*[A-Z])(?=.*\\d).{8,}$",
-    //        message = "INVALID_PASSWORD"
-    //)
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*\\d).{8,}$",
+            message = "INVALID_PASSWORD"
+    )
     private String matKhau;
+    
     @Email(message = "INVALID_EMAIL")
     private String email;
-    //@Column(nullable = false, unique = true)
+    
     private String soDT;
     private String diaChi;
+    
+    @NotNull(message = "maQuanHuyen is required")
     private Long maQuanHuyen;
 }

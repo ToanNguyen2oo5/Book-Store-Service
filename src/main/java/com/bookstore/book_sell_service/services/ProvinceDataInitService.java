@@ -44,7 +44,7 @@ public class ProvinceDataInitService implements CommandLineRunner {
         log.info("Số lượng quận/huyện hiện có: {}", existingHuyenCount);
 
         if (existingTinhCount > 0 && existingHuyenCount > 0) {
-            log.info("Dữ liệu tỉnh và huyện đã tồn tại. Bỏ qua việc fetch từ API.");
+            log.info("existed quan huyen, tinh. skipping fetch from API.");
             return;
         }
 
@@ -120,11 +120,11 @@ public class ProvinceDataInitService implements CommandLineRunner {
                     new TypeReference<List<ProvinceApiResponse>>() {}
             );
 
-            log.info("✅ Parse thành công {} tỉnh", provinces.size());
+            log.info("sucessful parse {} tinh", provinces.size());
             return provinces;
 
         } catch (Exception e) {
-            log.error("❌ Lỗi khi fetch tỉnh: {}", e.getMessage(), e);
+            log.error(" unable to fetch tinh: {}", e.getMessage(), e);
             return null;
         }
     }
@@ -140,7 +140,7 @@ public class ProvinceDataInitService implements CommandLineRunner {
                     .requestFactory(requestFactory)
                     .build();
 
-            log.info("🌐 Đang gọi API Quận/Huyện: {}", DISTRICT_API_URL);
+            log.info(" Calling API Quận/Huyện: {}", DISTRICT_API_URL);
 
             String responseBody = restClient.get()
                     .uri(DISTRICT_API_URL)
@@ -150,34 +150,34 @@ public class ProvinceDataInitService implements CommandLineRunner {
                     .body(String.class);
 
             if (responseBody == null || responseBody.trim().isEmpty()) {
-                log.error("❌ API quận/huyện trả về response rỗng");
+                log.error(" API quận/huyện trả về response rỗng");
                 return null;
             }
 
             if (responseBody.trim().startsWith("<")) {
-                log.error("❌ API quận/huyện trả về HTML thay vì JSON");
+                log.error(" API quận/huyện trả về HTML thay vì JSON");
                 return null;
             }
 
-            log.info("✅ Đã nhận response từ API Quận/Huyện ({} ký tự)", responseBody.length());
+            log.info(" Đã nhận response từ API Quận/Huyện ({} ký tự)", responseBody.length());
 
             List<DistrictFullApiResponse> districts = objectMapper.readValue(
                     responseBody,
                     new TypeReference<List<DistrictFullApiResponse>>() {}
             );
 
-            log.info("✅ Parse thành công {} quận/huyện", districts.size());
+            log.info("Parse thành công {} quận/huyện", districts.size());
             return districts;
 
         } catch (Exception e) {
-            log.error("❌ Lỗi khi fetch quận/huyện: {}", e.getMessage(), e);
+            log.error(" Lỗi khi fetch quận/huyện: {}", e.getMessage(), e);
             return null;
         }
     }
 
     @Transactional
     public Map<Integer, Tinh> saveProvinces(List<ProvinceApiResponse> provinces) {
-        log.info("💾 Bắt đầu lưu {} tỉnh vào database...", provinces.size());
+        log.info(" Bắt đầu lưu {} tỉnh vào database...", provinces.size());
 
         Map<Integer, Tinh> provinceCodeMap = new HashMap<>();
         int savedCount = 0;
@@ -199,24 +199,24 @@ public class ProvinceDataInitService implements CommandLineRunner {
                 // Lưu vào map để sau này mapping với quận/huyện
                 provinceCodeMap.put(provinceApi.getCode(), tinh);
 
-                log.info("✅ [{}/{}] Lưu tỉnh: {} (code: {}, ID: {})",
+                log.info(" [{}/{}] Lưu tỉnh: {} (code: {}, ID: {})",
                         savedCount, provinces.size(),
                         tinh.getTenTinh(), provinceApi.getCode(), tinh.getMaTinh());
 
             } catch (Exception e) {
-                log.error("❌ Lỗi khi lưu tỉnh {}: {}", provinceApi.getName(), e.getMessage());
+                log.error(" Lỗi khi lưu tỉnh {}: {}", provinceApi.getName(), e.getMessage());
             }
         }
 
         tinhRepository.flush();
-        log.info("✅ Đã lưu {} tỉnh", savedCount);
+        log.info(" Đã lưu {} tỉnh", savedCount);
         return provinceCodeMap;
     }
 
     @Transactional
     public void saveDistricts(List<DistrictFullApiResponse> districts,
                               Map<Integer, Tinh> provinceCodeMap) {
-        log.info("💾 Bắt đầu lưu {} quận/huyện vào database...", districts.size());
+        log.info(" Bắt đầu lưu {} quận/huyện vào database...", districts.size());
 
         int savedCount = 0;
         int skippedCount = 0;
@@ -231,7 +231,7 @@ public class ProvinceDataInitService implements CommandLineRunner {
                 // Tìm tỉnh tương ứng
                 Tinh tinh = provinceCodeMap.get(districtApi.getProvinceCode());
                 if (tinh == null) {
-                    log.warn("⚠️ Không tìm thấy tỉnh với code {} cho quận/huyện {}",
+                    log.warn(" Không tìm thấy tỉnh với code {} cho quận/huyện {}",
                             districtApi.getProvinceCode(), districtApi.getName());
                     skippedCount++;
                     continue;
@@ -246,13 +246,13 @@ public class ProvinceDataInitService implements CommandLineRunner {
                 savedCount++;
 
                 if (savedCount <= 10 || savedCount % 100 == 0) {
-                    log.info("✅ [{}/{}] Lưu quận/huyện: {} (thuộc {})",
+                    log.info(" [{}/{}] Lưu quận/huyện: {} (thuộc {})",
                             savedCount, districts.size(),
                             quanHuyen.getTenQuanHuyen(), tinh.getTenTinh());
                 }
 
             } catch (Exception e) {
-                log.error("❌ Lỗi khi lưu quận/huyện {}: {}",
+                log.error(" Lỗi khi lưu quận/huyện {}: {}",
                         districtApi.getName(), e.getMessage());
                 skippedCount++;
             }
@@ -260,7 +260,7 @@ public class ProvinceDataInitService implements CommandLineRunner {
 
         quanHuyenRepository.flush();
         log.info("=== TỔNG KẾT QUẬN/HUYỆN ===");
-        log.info("✅ Đã lưu: {}", savedCount);
-        log.info("⚠️ Bỏ qua: {}", skippedCount);
+        log.info("Đã lưu: {}", savedCount);
+        log.info("Bỏ qua: {}", skippedCount);
     }
 }

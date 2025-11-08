@@ -54,8 +54,9 @@ public class KhachHangController {
     }
 
     @PutMapping("/{maKH}")
-    public ApiResponse<KhachHang> updateUser(@PathVariable String maKH, @RequestBody @Valid KhachHangUpdateRequest request ){
-        return ApiResponse.<KhachHang>builder()
+    public ApiResponse<KHResponse> updateUser(@PathVariable String maKH
+            , @RequestBody @Valid KhachHangUpdateRequest request ){
+        return ApiResponse.<KHResponse>builder()
                 .result(khachHangService.updateKH(maKH,request))
                 .build();
     }

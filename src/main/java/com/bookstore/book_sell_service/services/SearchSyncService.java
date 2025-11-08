@@ -33,13 +33,13 @@ public class SearchSyncService implements CommandLineRunner {
                 .orElse(null);
 
         if (sach == null) {
-            log.warn("Không tìm thấy sách với ID: {} để đồng bộ.", maSach);
+            log.warn("book not found with ID: {} to sync.", maSach);
             return;
         }
 
         SachDocument sachDocument = SachDocument.fromEntity(sach);
         sachSearchRepository.save(sachDocument);
-        log.info("Đã đồng bộ sách {} lên Elasticsearch.", sach.getTenSach());
+        log.info("book synchronized {} to Elasticsearch.", sach.getTenSach());
     }
 
     /**
@@ -47,7 +47,7 @@ public class SearchSyncService implements CommandLineRunner {
      */
     public void deleteSachFromIndex(Long maSach) {
         sachSearchRepository.deleteById(maSach);
-        log.info("Đã xóa sách ID: {} khỏi Elasticsearch.", maSach);
+        log.info("deleted book with ID: {} khỏi Elasticsearch.", maSach);
     }
 
     /**
@@ -61,11 +61,11 @@ public class SearchSyncService implements CommandLineRunner {
 
         // Bước 1: Kiểm tra xem index đã tồn tại chưa
         if (indexOps.exists()) {
-            log.info("Index [sach_index] đã tồn tại.");
+            log.info("Index [sach_index] existed.");
 
             // Bước 2: Kiểm tra xem có dữ liệu không
             if (sachSearchRepository.count() > 0) {
-                log.info("Elasticsearch đã có dữ liệu. Bỏ qua đồng bộ ban đầu.");
+                log.info("Elasticsearch already has data. skip the sync.");
                 return;
             }
             // Index tồn tại nhưng không có dữ liệu, tiến hành đồng bộ

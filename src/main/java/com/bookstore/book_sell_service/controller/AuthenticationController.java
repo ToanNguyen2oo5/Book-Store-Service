@@ -3,6 +3,8 @@ package com.bookstore.book_sell_service.controller;
 import com.bookstore.book_sell_service.dto.request.ApiResponse;
 import com.bookstore.book_sell_service.dto.request.AuthenticationRequest;
 import com.bookstore.book_sell_service.dto.request.IntrospectRequest;
+import com.bookstore.book_sell_service.dto.request.LogOut_Refresh.LogoutRequest;
+import com.bookstore.book_sell_service.dto.request.LogOut_Refresh.RefreshRequest;
 import com.bookstore.book_sell_service.dto.responses.AuthenticationResponse;
 import com.bookstore.book_sell_service.dto.responses.IntrospectResponse;
 import com.bookstore.book_sell_service.services.AuthenticationService;
@@ -37,5 +39,17 @@ public class AuthenticationController {
         return ApiResponse.<IntrospectResponse>builder()
                 .result(result)
                 .build();
+    }
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder().build();
     }
 }

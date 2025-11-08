@@ -54,7 +54,7 @@ public class KhachHangService {
                 map(userMapper::toKHResponse).collect(Collectors.toList());
     }
 
-    public KhachHang updateKH(String maKH, KhachHangUpdateRequest request){
+    public KHResponse updateKH(String maKH, KhachHangUpdateRequest request){
         KhachHang khachHang =khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
         QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
@@ -62,7 +62,7 @@ public class KhachHangService {
         userMapper.updateKH(khachHang, request);
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         khachHang.setQuanHuyen(quanHuyen);
-        return khachHangRepository.save(khachHang);
+        return userMapper.toKHResponse(khachHangRepository.save(khachHang));
     }
 
     @PostAuthorize("returnObject.hoTen == authentication.name")// chỉ người đang đăng nhập mới xóa được tài khoản bản thân
