@@ -1,6 +1,7 @@
 package com.bookstore.book_sell_service.exception;
 
 import com.bookstore.book_sell_service.dto.request.ApiResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,12 +13,12 @@ public class GlobalExceptionHandler {
 
 //    @ExceptionHandler(value= Exception.class)
 //    ResponseEntity<ApiResponse> handlingRunTimeException(RuntimeException exception){
-//        ApiResponse apiResponse=new ApiResponse();
+//       ApiResponse apiResponse=new ApiResponse();
 //        apiResponse.setCode(ErrorCode.UNCATEGORIZED_ERROR.getCode());
 //        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_ERROR.getMessage());
 //
 //        return ResponseEntity.badRequest().body(apiResponse);
-//    }
+//       }
     @ExceptionHandler(value= AppException.class)
     ResponseEntity<ApiResponse> handlingAppException(AppException exception){
         ErrorCode errorCode= exception.getErrorCode();
@@ -53,6 +54,13 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    ResponseEntity<ApiResponse> handlingDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        ErrorCode errorCode = ErrorCode.DUPLICATE_ENTRY;
 
-
+        return ResponseEntity.status(errorCode.getStatusCode()).body(ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build());
+    }
 }

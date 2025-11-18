@@ -44,8 +44,8 @@ public class NhanVienService {
     }
     @PostAuthorize("returnObject.tenDangNhap == authentication.name")
     public NVResponse getNhanVien(Long maNV){
-        return nhanVienMapper.toNhanVienResponse(nhanVienRepository.findById(maNV).orElseThrow(()-> new RuntimeException("user not found")))
-                ;
+        return nhanVienMapper.toNhanVienResponse(nhanVienRepository.findById(maNV)
+                .orElseThrow(()-> new RuntimeException("user not found")));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

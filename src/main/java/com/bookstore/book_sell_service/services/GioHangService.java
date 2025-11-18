@@ -63,11 +63,14 @@ public class GioHangService {
             );
 
             // ✅ Tạo chi tiết mới VÀ SET ID
+
             ChiTietGioHang newChiTiet = ChiTietGioHang.builder()
                     .id(chiTietId)  // ← QUAN TRỌNG: Phải set ID
                     .gioHang(gioHang)
                     .sach(sach)
-                    .soLuongMua(1)
+                    .soLuongMua(
+                            ((request.getSoLuong() == null) ? 1 : request.getSoLuong())
+                    )
                     .build();
 
             chiTietGioHangRepository.save(newChiTiet);

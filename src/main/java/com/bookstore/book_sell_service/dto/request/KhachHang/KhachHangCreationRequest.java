@@ -17,14 +17,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class KhachHangCreationRequest {
-   @Size(min=3,message = "INVALID_USERNAME")
-   @NotBlank(message = "INVALID_USERNAME" )
-   @Pattern(
-            regexp = "^[a-zA-Z0-9]+$",
-          message = "INVALID_USERNAME"
-  )
+
     private String hoTen;
     @Column(nullable = false, unique = true)
+    @Size(min=3,message = "INVALID_USERNAME")
+    @NotBlank(message = "INVALID_USERNAME" )
+    @Pattern(
+            regexp = "^[a-zA-Z0-9]+$",
+            message = "INVALID_USERNAME"
+    )
     private String userName;
     @Size(min=8,message = "INVALID_PASSWORD")
     @NotBlank(message = "BLANK_PASSWORD")

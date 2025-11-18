@@ -13,6 +13,7 @@ import com.bookstore.book_sell_service.repositories.QuanHuyenRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -52,18 +53,24 @@ public class KhachHangService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<KHResponse> getAllKhachHangs(){
+        log.info("ko");
     return khachHangRepository.findAll().stream().
                 map(userMapper::toKHResponse).collect(Collectors.toList());
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public KHResponse updateKH(String maKH, KhachHangUpdateRequest request){
+        log.info("oko");
         KhachHang khachHang =khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
+        log.info("oko1");
         userMapper.updateKH(khachHang, request);
-        QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
-                        .orElseThrow(() -> new RuntimeException("KO tim thay"));
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+        log.info("oko2");
+        QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
+                .orElseThrow(() -> new RuntimeException("Loi"));
+        log.info("oko3");
         khachHang.setQuanHuyen(quanHuyen);
+        log.info("oko4");
         return userMapper.toKHResponse(khachHangRepository.save(khachHang));
     }
 
