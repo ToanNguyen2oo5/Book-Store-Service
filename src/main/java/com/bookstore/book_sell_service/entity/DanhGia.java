@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "DANH_GIA")
@@ -22,10 +23,11 @@ public class DanhGia {
 
     private Integer soSao;
     private String binhLuan;
-    private LocalDate ngayBL;
+    private LocalDateTime ngayBL;
 
     @ManyToOne
     @JoinColumn(name = "maSP")
+    @JsonIgnore
     private Sach sach;
 
     @ManyToOne

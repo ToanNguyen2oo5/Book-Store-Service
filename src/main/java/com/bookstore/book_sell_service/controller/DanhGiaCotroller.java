@@ -35,6 +35,13 @@ public class DanhGiaCotroller {
                 .result(danhGiaService.getAll())
                 .build();
     }
+
+    @GetMapping("/{maSach}")
+    public ApiResponse<List<DanhGiaResponse>> getAllByMaSach(@PathVariable Long maSach){
+        return ApiResponse.<List<DanhGiaResponse>>builder()
+                .result(danhGiaService.getAllByMaSach(maSach))
+                .build();
+    }
     @DeleteMapping("/{maDanhGia}")
     public ApiResponse<Void> deleteDG(@PathVariable Long maDanhGia)
     {

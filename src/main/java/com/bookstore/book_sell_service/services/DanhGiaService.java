@@ -17,8 +17,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,8 @@ public class DanhGiaService {
     SachRepository sachRepository;
 
 //    @PreAuthorize("hasRole('USER')")
+
+    @Transactional
     public DanhGia createDanhGia(DanhGiaRequest danhGiaRequest){
 
 
@@ -48,16 +52,21 @@ public class DanhGiaService {
         DanhGia danhGia = new DanhGia();
         danhGia.setSoSao(danhGiaRequest.getSoSao());
         danhGia.setBinhLuan(danhGiaRequest.getBinhLuan());
-        danhGia.setNgayBL(LocalDate.now());
+        danhGia.setNgayBL(LocalDateTime.now());
         danhGia.setKhachHang(khachHang);
         danhGia.setSach(sach);
 
         return danhGiaRepository.save(danhGia);
     }
-//    @PreAuthorize("hasRole('STAFF')")
+
     public List<DanhGiaResponse> getAll(){
        return danhGiaRepository.findALLDanhGia();
     }
+
+    public List<DanhGiaResponse> getAllByMaSach(Long maSach){
+        return danhGiaRepository.findALLDanhGiaByMaSach(maSach);
+    }
+
 //    @PreAuthorize("hasRole('STAFF')")
     public void deleteBL(Long maDanhGia)
     {

@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class ChiTietGioHang {
     @ManyToOne
     @MapsId("maSach")
     @JoinColumn(name = "ma_sach")
+
     private Sach sach;
     }
 

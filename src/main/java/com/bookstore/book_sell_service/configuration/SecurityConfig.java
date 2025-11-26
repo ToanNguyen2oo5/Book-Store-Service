@@ -35,7 +35,9 @@ public class SecurityConfig {
             "/tinh", "/kh/request-sach",
             "/search", "/suggest"
     };
-
+    private final String[] PUBLIC_GET_ENDPOINTS = {
+            "/danh_gia" , "/danh_gia/{maSach}"
+    };
     @Value("${jwt.signerKey}")
     private String signerKey;
 
@@ -45,6 +47,7 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                                 .anyRequest().authenticated()
                 );
 

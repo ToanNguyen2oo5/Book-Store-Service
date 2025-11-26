@@ -7,6 +7,7 @@ import com.bookstore.book_sell_service.entity.Sach;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 @Repository
 public interface ChiTietGioHangRepository extends JpaRepository<ChiTietGioHang, ChiTietGioHangId> {
@@ -18,4 +19,7 @@ public interface ChiTietGioHangRepository extends JpaRepository<ChiTietGioHang, 
     void deleteByGioHang(GioHang gioHang);
 
     void deleteByGioHang_MaGioHang(Long maGioHang);
+
+    List<ChiTietGioHang> findAllByGioHang(GioHang gioHang);
+
 }

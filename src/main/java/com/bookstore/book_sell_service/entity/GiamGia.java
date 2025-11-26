@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class GiamGia {
     private String moTa;
 
     @OneToMany(mappedBy = "giamGia")
+    @JsonIgnore
     private List<DonHang> donHangList;
 
     @OneToMany(mappedBy = "giamGia")
