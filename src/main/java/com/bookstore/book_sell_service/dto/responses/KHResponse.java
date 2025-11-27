@@ -13,7 +13,6 @@ public class KHResponse {
     private String maKH;
     private String hoTen;
     private String userName;
-    private String matKhau;
     private String email;
     private String soDT;
     private String diaChi;

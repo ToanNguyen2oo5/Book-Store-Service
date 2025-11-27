@@ -12,8 +12,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +45,8 @@ public class KhachHangController {
     }
 
     @GetMapping("/{maKH}")
-    public ApiResponse<KHResponse> getKhachHang(@PathVariable String maKH){
-        return ApiResponse.<KHResponse>builder()
+    public ApiResponse<KhachHang> getKhachHang(@PathVariable String maKH){
+        return ApiResponse.<KhachHang>builder()
                 .result(khachHangService.getKhachHang(maKH))
                 .build();
     }
