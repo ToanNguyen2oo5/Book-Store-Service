@@ -3,6 +3,9 @@ package com.bookstore.book_sell_service.services;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangDelete;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangRequest;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangUpdate;
+import com.bookstore.book_sell_service.dto.responses.ChiTietGHResponse;
+import com.bookstore.book_sell_service.dto.responses.GioHangResponse;
+import com.bookstore.book_sell_service.dto.responses.Sach_in_GioHang;
 import com.bookstore.book_sell_service.entity.*;
 import com.bookstore.book_sell_service.exception.AppException;
 import com.bookstore.book_sell_service.exception.ErrorCode;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,11 +67,14 @@ public class GioHangService {
             );
 
             // ✅ Tạo chi tiết mới VÀ SET ID
+
             ChiTietGioHang newChiTiet = ChiTietGioHang.builder()
                     .id(chiTietId)  // ← QUAN TRỌNG: Phải set ID
                     .gioHang(gioHang)
                     .sach(sach)
-                    .soLuongMua(1)
+                    .soLuongMua(
+                            ((request.getSoLuong() == null) ? 1 : request.getSoLuong())
+                    )
                     .build();
 
             chiTietGioHangRepository.save(newChiTiet);
@@ -128,4 +135,47 @@ public class GioHangService {
 
         chiTietGioHangRepository.deleteByGioHangAndSach(gioHang,sach);
     }
+
+    // xem gio hang cua minh
+    public GioHangResponse getGHOfMaKH (){
+
+        KhachHang khachHang = authenticationService.khachHang();
+
+        GioHang gioHang = gioHangRepository.findByKhachHang_UserName(khachHang.getUserName())
+                .orElseThrow(() -> new RuntimeException("Khong tim thay gio hang"));
+
+
+        List<ChiTietGioHang> chiTietGioHangList = chiTietGioHangRepository.findAllByGioHang(gioHang);
+
+        if (chiTietGioHangList.isEmpty()){
+            throw new RuntimeException("Gio hang ko co san pham");
+        }
+
+        List <ChiTietGHResponse> responses =
+                chiTietGioHangList.stream()
+                        .map( ct -> {
+                            Sach sach = ct.getSach();
+                            Sach_in_GioHang sachInGioHang = new Sach_in_GioHang(
+                                    sach.getMaSach(),
+                                    sach.getTenSach(),
+                                    sach.getDonGia()
+                            );
+                            return new ChiTietGHResponse(
+                                    sachInGioHang,
+                                    sach.getDonGia(),
+                                    ct.getSoLuongMua(),
+                                    sach.getDonGia() * ct.getSoLuongMua()
+                            );
+                            })
+                        .collect(Collectors.toList());
+        double tongTien = responses.stream()
+                .mapToDouble(ChiTietGHResponse::getThanhTien)
+                .sum();
+        return GioHangResponse.builder()
+                .maGioHang(gioHang.getMaGioHang())
+                .chiTietGHResponses(responses)
+                .tongTien(tongTien)
+                .build();
+    }
+
 }

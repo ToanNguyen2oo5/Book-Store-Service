@@ -3,6 +3,7 @@ package com.bookstore.book_sell_service.services;
 import com.bookstore.book_sell_service.dto.request.DonHang.DonHangCreate;
 import com.bookstore.book_sell_service.dto.request.DonHang.UpdateTrangThai;
 import com.bookstore.book_sell_service.dto.responses.DHResponse;
+import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.dto.responses.ThongKeResponse;
 import com.bookstore.book_sell_service.entity.*;
 import com.bookstore.book_sell_service.enums.TrangThai;
@@ -141,13 +142,49 @@ public class DonHangService {
     // lay danh sach cac don hang tu admin
     @PreAuthorize("hasRole('ADMIN')")
     public List<DHResponse> getALLDonHang(){
-        return donHangMapper.togetAllDH(donHangRepository.findAll());
+        List<DonHang> donHangList = donHangRepository.findAll();
+
+        List<DHResponse> listDH = donHangList.stream()
+                .map(ct -> {
+                    KhachHang kh = ct.getKhachHang();
+                    KHResponse khResponse = new KHResponse();
+                    khResponse.setMaKH(kh.getMaKH());
+                    khResponse.setHoTen(kh.getHoTen());
+                    khResponse.setEmail(kh.getEmail());
+                    khResponse.setSoDT(kh.getSoDT());
+
+                    DHResponse dhResponse = donHangMapper.togetDH(ct);
+
+                    // Gán KHResponse vào DHResponse
+                    dhResponse.setKhResponse(khResponse);
+
+                    return dhResponse;
+                })
+                .collect(Collectors.toList());
+        return listDH;
     }
+
+
     // xem chi tiet don hang
     @PreAuthorize("hasRole('ADMIN')")
     public DHResponse getDonHang(Long maDH){
-        return donHangMapper.togetDH(donHangRepository.findById(maDH)
-                .orElseThrow(() -> new RuntimeException("Ko tim thay")));
+        DonHang donHang = donHangRepository.findById(maDH)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        // Map KhachHang → KHResponse
+        KhachHang kh = donHang.getKhachHang();
+        KHResponse khResponse = new KHResponse();
+        khResponse.setMaKH(kh.getMaKH());
+        khResponse.setHoTen(kh.getHoTen());
+        khResponse.setEmail(kh.getEmail());
+        khResponse.setSoDT(kh.getSoDT());
+
+        DHResponse dhResponse = donHangMapper.togetDH(donHang);
+
+        // Gán KHResponse vào DHResponse
+        dhResponse.setKhResponse(khResponse);
+
+        return dhResponse;
     }
 
     // cap nhat trang thai don hang

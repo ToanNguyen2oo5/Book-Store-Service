@@ -3,6 +3,7 @@ package com.bookstore.book_sell_service.exception;
 import com.bookstore.book_sell_service.dto.request.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -25,7 +26,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(apiResponse);
        }
-       
+
     @ExceptionHandler(value= AppException.class)
     ResponseEntity<ApiResponse> handlingAppException(AppException exception){
         ErrorCode errorCode= exception.getErrorCode();
@@ -35,18 +36,17 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(apiResponse);
     }
-    
     @ExceptionHandler(value= MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse> handlingMethodArgumentNotValidException(MethodArgumentNotValidException exception){
         log.error("Validation error: ", exception);
-        
+
         // Get all validation errors
         String errorDetails = exception.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        
+
         log.error("Validation errors: {}", errorDetails);
-        
+
         // Try to get the first error code from the message
         String enumKey = exception.getFieldError().getDefaultMessage();
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
@@ -55,13 +55,13 @@ public class GlobalExceptionHandler {
         } catch (IllegalArgumentException e) {
             log.warn("Error code '{}' not found in ErrorCode enum, using INVALID_KEY", enumKey);
         }
-        
+
         return ResponseEntity.status(errorCode.getStatusCode()).body(ApiResponse.builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage() + " - " + errorDetails)
                 .build());
     }
-    
+
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     ResponseEntity<ApiResponse> handlingHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
         log.error("JSON parsing error: ", exception);
@@ -70,12 +70,13 @@ public class GlobalExceptionHandler {
         if (exception.getCause() != null) {
             message = "Invalid JSON format: " + exception.getCause().getMessage();
         }
-        
+
         return ResponseEntity.status(errorCode.getStatusCode()).body(ApiResponse.builder()
                 .code(errorCode.getCode())
                 .message(message)
                 .build());
     }
+
 
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse> handlingAccessDeniedException( AccessDeniedException exception){
@@ -97,4 +98,7 @@ public class GlobalExceptionHandler {
                 .message(errorCode.getMessage())
                 .build());
     }
+
+
+
 }

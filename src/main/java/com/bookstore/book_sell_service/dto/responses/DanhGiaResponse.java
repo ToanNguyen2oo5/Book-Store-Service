@@ -1,10 +1,12 @@
 package com.bookstore.book_sell_service.dto.responses;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -18,6 +20,7 @@ public class DanhGiaResponse {
     private String tenSach;
     private Integer soSao;
     private String binhLuan;
-    private LocalDate ngayBL;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime ngayBL;
     private Long maDanhGia;
 }

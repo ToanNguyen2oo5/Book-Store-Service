@@ -4,6 +4,7 @@ import com.bookstore.book_sell_service.dto.responses.DanhGiaResponse;
 import com.bookstore.book_sell_service.entity.DanhGia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,16 @@ public interface DanhGiaRepository extends JpaRepository<DanhGia,Long> {
                     "JOIN bl.khachHang n"
     )
     List<DanhGiaResponse> findALLDanhGia();
+
+    @Query(
+            "SELECT new com.bookstore.book_sell_service.dto.responses.DanhGiaResponse(" +
+                    "n.hoTen, s.tenSach, bl.soSao, bl.binhLuan, bl.ngayBL, bl.maDanhGia) " +
+                    "FROM DanhGia bl " +
+                    "JOIN bl.sach s " +
+                    "JOIN bl.khachHang n " +
+                    "WHERE s.maSach = :maSach"
+    )
+    List<DanhGiaResponse> findALLDanhGiaByMaSach(@Param("maSach") Long maSach);
 
 
 }

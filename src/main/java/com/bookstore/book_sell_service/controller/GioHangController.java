@@ -5,6 +5,7 @@ import com.bookstore.book_sell_service.dto.request.ApiResponse;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangDelete;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangRequest;
 import com.bookstore.book_sell_service.dto.request.GioHang.GioHangUpdate;
+import com.bookstore.book_sell_service.dto.responses.GioHangResponse;
 import com.bookstore.book_sell_service.services.GioHangService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,14 @@ public class GioHangController {
         gioHangService.deleteSach(delete);
         return ApiResponse.<Void>builder()
                 .message("oko")
+                .build();
+    }
+    @GetMapping("/GH_of_user")
+    public ApiResponse<GioHangResponse> gioHangOfUser (){
+        GioHangResponse gioHangResponse = gioHangService.getGHOfMaKH();
+        return ApiResponse.<GioHangResponse>builder()
+                .message("oko")
+                .result(gioHangResponse)
                 .build();
     }
 

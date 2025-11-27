@@ -13,16 +13,18 @@ import com.bookstore.book_sell_service.repositories.QuanHuyenRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -38,34 +40,40 @@ public class KhachHangService {
         KhachHang khachHang=userMapper.toUser(request);
         khachHang.setUserName(request.getUserName());
         khachHang.setQuanHuyen(quanHuyen);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         return khachHangRepository.save(khachHang);
     }
 
     @PostAuthorize("returnObject.hoTen == authentication.name")
-    public KHResponse getKhachHang(@PathVariable  String maKH){
-        return userMapper.toKHResponse( khachHangRepository.findById(maKH)
-                .orElseThrow(() -> new RuntimeException("user not found")));
+    public KhachHang getKhachHang(@PathVariable  String maKH){
+        return khachHangRepository.findById(maKH)
+                .orElseThrow(() -> new RuntimeException("user not found"));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<KHResponse> getAllKhachHangs(){
-        return khachHangRepository.findAll().stream().
+        log.info("ko");
+    return khachHangRepository.findAll().stream().
                 map(userMapper::toKHResponse).collect(Collectors.toList());
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public KHResponse updateKH(String maKH, KhachHangUpdateRequest request){
+        log.info("oko");
         KhachHang khachHang =khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
-        QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
-                .orElseThrow(() -> new RuntimeException("QuanHuyen not found"));
+        log.info("oko1");
         userMapper.updateKH(khachHang, request);
         khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+        log.info("oko2");
+        QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
+                .orElseThrow(() -> new RuntimeException("Loi"));
+        log.info("oko3");
         khachHang.setQuanHuyen(quanHuyen);
+        log.info("oko4");
         return userMapper.toKHResponse(khachHangRepository.save(khachHang));
     }
 
-    @PostAuthorize("returnObject.hoTen == authentication.name")// chỉ người đang đăng nhập mới xóa được tài khoản bản thân
     public void deleteKH(String maKH){
         khachHangRepository.deleteById(maKH);
     }

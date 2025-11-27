@@ -20,6 +20,7 @@ public class SachSearchService {
 
     /**
      *  (Tìm kiếm gần đúng - Fuzzy Search)
+     * Yêu cầu 1: "toiet" -> "toilet" (Tìm kiếm gần đúng - Fuzzy Search)
      */
     public List<SachDocument> searchFuzzy(String term) {
         // Tạo một truy vấn "match" với tùy chọn fuzziness
