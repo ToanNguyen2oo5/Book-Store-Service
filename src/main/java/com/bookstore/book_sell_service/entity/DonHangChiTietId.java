@@ -1,12 +1,10 @@
 package com.bookstore.book_sell_service.entity;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
+@Data
 @Embeddable
 @Setter
 @Getter
