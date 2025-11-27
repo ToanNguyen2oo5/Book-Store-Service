@@ -33,6 +33,7 @@ public class DonHangController {
                 .result( donHangService.getALLDonHang())
                 .build();
     }
+    //lay don hang theo ma
     @GetMapping("/getDH/{maDH}")
     public  ApiResponse<DHResponse> getDH(@PathVariable Long maDH){
         return ApiResponse.<DHResponse>builder()
@@ -45,6 +46,15 @@ public class DonHangController {
         donHangService.updateTrangThai(updateTrangThai);
         return ApiResponse.<Void>builder()
                 .message("oko")
+                .build();
+    }
+    // danh sach don hang cua khach hang
+    @GetMapping("/don_hang_of_KH")
+    public ApiResponse<List<DHResponse>> getDHofKH(){
+        List<DHResponse>donHangServiceDHofKH = donHangService.getDHofKH();
+        return ApiResponse.<List<DHResponse>>builder()
+                .message("oko")
+                .result(donHangServiceDHofKH)
                 .build();
     }
 }
