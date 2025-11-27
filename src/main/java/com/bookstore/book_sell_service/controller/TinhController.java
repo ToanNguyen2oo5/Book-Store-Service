@@ -4,11 +4,12 @@ import com.bookstore.book_sell_service.dto.request.ApiResponse;
 import com.bookstore.book_sell_service.dto.request.TinhRequest;
 import com.bookstore.book_sell_service.entity.Tinh;
 import com.bookstore.book_sell_service.services.TinhService;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/tinh")
@@ -22,5 +23,11 @@ public class TinhController {
         ApiResponse<Tinh> apiResponse = new ApiResponse<>();
         apiResponse.setResult(tinhService.createTinh(request));
         return apiResponse;
+    }
+    @GetMapping
+    ApiResponse<List<Tinh>> getTinhs(){
+        return ApiResponse.<List<Tinh>>builder()
+                .result(tinhService.getTinhs())
+                .build();
     }
 }

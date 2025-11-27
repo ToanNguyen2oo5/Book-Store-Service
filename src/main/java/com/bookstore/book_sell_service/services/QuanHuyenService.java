@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -25,4 +27,8 @@ public class QuanHuyenService {
         quanHuyen.setTinh(tinh);
         return quanHuyenRepository.save(quanHuyen);
     }
+    public List<QuanHuyen> getQuanHuyens(){
+        return quanHuyenRepository.findAll();
+    }
+
 }

@@ -33,11 +33,8 @@ public class DanhGiaService {
     DanhGiaRepository danhGiaRepository;
     SachRepository sachRepository;
 
-//    @PreAuthorize("hasRole('USER')")
-
-    @Transactional
+    @PreAuthorize("isAuthenticated()")
     public DanhGia createDanhGia(DanhGiaRequest danhGiaRequest){
-
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -58,10 +55,11 @@ public class DanhGiaService {
 
         return danhGiaRepository.save(danhGia);
     }
-
-    public List<DanhGiaResponse> getAll(){
+    @PreAuthorize("hasRole('STAFF')")
+    public List<DanhGiaResponse> getAllDanhGia(){
        return danhGiaRepository.findALLDanhGia();
     }
+    @PreAuthorize("hasRole('STAFF')")
 
     public List<DanhGiaResponse> getAllByMaSach(Long maSach){
         return danhGiaRepository.findALLDanhGiaByMaSach(maSach);

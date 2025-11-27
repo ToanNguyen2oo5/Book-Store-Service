@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DanhGiaResponse {
 
-
     private String hoTen;
     private String tenSach;
     private Integer soSao;
