@@ -8,6 +8,7 @@ import com.bookstore.book_sell_service.dto.responses.ThongKeResponse;
 import com.bookstore.book_sell_service.entity.*;
 import com.bookstore.book_sell_service.enums.TrangThai;
 import com.bookstore.book_sell_service.mapper.DonHangMapper;
+import com.bookstore.book_sell_service.mapper.UserMapper;
 import com.bookstore.book_sell_service.repositories.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,7 +42,7 @@ public class DonHangService {
     DonHangRepository donHangRepository;
     ChiTietDHRepository chiTietDHRepository;
     private final GioHangRepository gioHangRepository;
-
+    UserMapper userMapper;
 
     @Transactional // Thêm transaction để đảm bảo tính toàn vẹn dữ liệu
     public void createDonHang(DonHangCreate request) {
@@ -144,14 +145,10 @@ public class DonHangService {
     public List<DHResponse> getALLDonHang(){
         List<DonHang> donHangList = donHangRepository.findAll();
 
-        List<DHResponse> listDH = donHangList.stream()
+        return donHangList.stream()
                 .map(ct -> {
                     KhachHang kh = ct.getKhachHang();
-                    KHResponse khResponse = new KHResponse();
-                    khResponse.setMaKH(kh.getMaKH());
-                    khResponse.setHoTen(kh.getHoTen());
-                    khResponse.setEmail(kh.getEmail());
-                    khResponse.setSoDT(kh.getSoDT());
+                    KHResponse khResponse = userMapper.toKHResponse(kh);
 
                     DHResponse dhResponse = donHangMapper.togetDH(ct);
 
@@ -161,7 +158,6 @@ public class DonHangService {
                     return dhResponse;
                 })
                 .collect(Collectors.toList());
-        return listDH;
     }
 
 
@@ -173,11 +169,7 @@ public class DonHangService {
 
         // Map KhachHang → KHResponse
         KhachHang kh = donHang.getKhachHang();
-        KHResponse khResponse = new KHResponse();
-        khResponse.setMaKH(kh.getMaKH());
-        khResponse.setHoTen(kh.getHoTen());
-        khResponse.setEmail(kh.getEmail());
-        khResponse.setSoDT(kh.getSoDT());
+        KHResponse khResponse = userMapper.toKHResponse(kh);
 
         DHResponse dhResponse = donHangMapper.togetDH(donHang);
 
@@ -198,6 +190,26 @@ public class DonHangService {
         donHang.setTrangThai(tt.getMoTa());
 
         donHangRepository.save(donHang);
+    }
+
+    // lay danh sach don hang cua khach hang
+    public List<DHResponse> getDHofKH (){
+        KhachHang khachHang = authenticationService.khachHang();
+        List<DonHang> donHangList = donHangRepository.findAllByKhachHang_maKH(khachHang.getMaKH());
+
+        return donHangList.stream()
+                .map(ct -> {
+                    KhachHang kh = ct.getKhachHang();
+                    KHResponse khResponse = userMapper.toKHResponse(kh);
+
+                    DHResponse dhResponse = donHangMapper.togetDH(ct);
+
+                    // Gán KHResponse vào DHResponse
+                    dhResponse.setKhResponse(khResponse);
+
+                    return dhResponse;
+                })
+                .collect(Collectors.toList());
     }
 
 
