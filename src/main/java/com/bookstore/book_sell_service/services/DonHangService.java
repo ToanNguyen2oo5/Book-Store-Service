@@ -192,7 +192,7 @@ public class DonHangService {
         donHangRepository.save(donHang);
     }
 
-    // lay danh sach don hang cua khach hang
+    // lay danh sach don hang cua ban than
     public List<DHResponse> getDHofKH (){
         KhachHang khachHang = authenticationService.khachHang();
         List<DonHang> donHangList = donHangRepository.findAllByKhachHang_maKH(khachHang.getMaKH());

@@ -36,9 +36,9 @@ public class GioHangController {
                 .message("oko")
                 .build();
     }
-    @DeleteMapping("/delete-GH")
-    public ApiResponse<Void> gioHangDelete (@RequestBody GioHangDelete delete){
-        gioHangService.deleteSach(delete);
+    @DeleteMapping("/delete-GH/{maSach}")
+    public ApiResponse<Void> gioHangDelete(@PathVariable Long maSach) {
+        gioHangService.deleteSach(maSach);
         return ApiResponse.<Void>builder()
                 .message("oko")
                 .build();

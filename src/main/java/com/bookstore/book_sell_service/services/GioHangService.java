@@ -118,22 +118,23 @@ public class GioHangService {
 
         }
     }
+    
 
     @Transactional
-    public void deleteSach(GioHangDelete gioHangDelete){
+    public void deleteSach(Long maSach) {
 
         KhachHang user = authenticationService.khachHang();
 
-        Sach sach = sachRepository.findById(gioHangDelete.getMaSach())
+        Sach sach = sachRepository.findById(maSach)
                 .orElseThrow(() -> new RuntimeException("Loi ko tim thay sach"));
 
         GioHang gioHang = gioHangRepository.findByKhachHang_UserName(user.getUserName())
                 .orElseThrow(() -> new RuntimeException("Ko tim thay gio hang"));
 
-        ChiTietGioHang chiTietGioHang = chiTietGioHangRepository.findByGioHangAndSach(gioHang,sach)
+        ChiTietGioHang chiTietGioHang = chiTietGioHangRepository.findByGioHangAndSach(gioHang, sach)
                 .orElseThrow(() -> new RuntimeException("Ko tim thay "));
 
-        chiTietGioHangRepository.deleteByGioHangAndSach(gioHang,sach);
+        chiTietGioHangRepository.deleteByGioHangAndSach(gioHang, sach);
     }
 
     // xem gio hang cua minh
