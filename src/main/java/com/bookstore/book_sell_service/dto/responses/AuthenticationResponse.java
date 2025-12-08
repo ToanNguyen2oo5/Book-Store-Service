@@ -3,6 +3,8 @@ package com.bookstore.book_sell_service.dto.responses;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -11,4 +13,5 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticationResponse {
     String token;
     boolean authenticated;
+    Set<String> roles;
 }

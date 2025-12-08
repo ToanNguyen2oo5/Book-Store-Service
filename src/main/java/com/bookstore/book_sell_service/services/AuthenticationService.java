@@ -84,6 +84,7 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
         return AuthenticationResponse.builder()
+                .roles(user.getRoles())
                 .token(token)
                 .authenticated(true)
                 .build();

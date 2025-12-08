@@ -60,12 +60,11 @@ public class DanhGiaService {
        return danhGiaRepository.findALLDanhGia();
     }
     @PreAuthorize("hasRole('STAFF')")
-
     public List<DanhGiaResponse> getAllByMaSach(Long maSach){
         return danhGiaRepository.findALLDanhGiaByMaSach(maSach);
     }
 
-//    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasRole('STAFF')")
     public void deleteBL(Long maDanhGia)
     {
         danhGiaRepository.deleteById(maDanhGia);

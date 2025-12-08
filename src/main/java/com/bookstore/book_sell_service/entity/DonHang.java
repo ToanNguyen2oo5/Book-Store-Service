@@ -56,5 +56,4 @@ public class DonHang {
     @JsonManagedReference
     private List<DonHangChiTiet> chiTietDonHangList;
 
-
 }

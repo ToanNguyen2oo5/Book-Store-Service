@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class LoaiSach {
     private String moTa;
 
     @OneToMany(mappedBy = "loaiSach")
+    @JsonIgnore
     private List<Sach> sachList;
 
 }
