@@ -8,10 +8,12 @@ import com.bookstore.book_sell_service.dto.responses.AuthenticationResponse;
 import com.bookstore.book_sell_service.dto.responses.IntrospectResponse;
 import com.bookstore.book_sell_service.entity.InvalidateToken;
 import com.bookstore.book_sell_service.entity.KhachHang;
+import com.bookstore.book_sell_service.entity.NhanVien;
 import com.bookstore.book_sell_service.exception.AppException;
 import com.bookstore.book_sell_service.exception.ErrorCode;
 import com.bookstore.book_sell_service.repositories.InvalidatedTokenRepository;
 import com.bookstore.book_sell_service.repositories.KhachHangRepository;
+import com.bookstore.book_sell_service.repositories.NhanVienRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -32,9 +34,7 @@ import org.springframework.util.CollectionUtils;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -44,6 +44,7 @@ public class AuthenticationService {
     KhachHangRepository khachHangRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     PasswordEncoder passwordEncoder;
+    NhanVienRepository nhanVienRepository;
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -76,15 +77,31 @@ public class AuthenticationService {
     }
 
    public AuthenticationResponse authenticate(AuthenticationRequest request){
-    var user =khachHangRepository.findByUserName(request.getUserName())
-            .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
+//    var user =khachHangRepository.findByUserName(request.getUserName())
+//            .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        boolean authenticated= passwordEncoder.matches(request.getMatKhau(), user.getMatKhau());
+        Object user;
+        try {
+            user = khachHangRepository.findByUserName(request.getUserName())
+                    .orElseThrow();
+        } catch (Exception e) {
+            user = nhanVienRepository.findByTenDangNhap(request.getUserName())
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        }
+
+        String matKhau = ( user instanceof KhachHang)
+                ? ((KhachHang) user).getMatKhau() : ((NhanVien) user).getMatKhau() ;
+
+        Set<String> roles = ( user instanceof KhachHang)
+                ? ((KhachHang) user).getRoles()
+                : ((NhanVien) user).getRoles() ;
+
+        boolean authenticated= passwordEncoder.matches(request.getMatKhau(), matKhau);
         if(!authenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
         return AuthenticationResponse.builder()
-                .roles(user.getRoles())
+                .roles(roles)
                 .token(token)
                 .authenticated(true)
                 .build();
@@ -156,15 +173,31 @@ public class AuthenticationService {
 
     }
 
-    private String generateToken(KhachHang khachHang){
+    private String generateToken(Object user){
+
+        String userName;
+        String scope;
+
+        if (user instanceof  KhachHang kh){
+            userName = kh.getUserName();
+            scope = buildScope(kh);
+        }
+        else if (user instanceof  NhanVien nv){
+            userName = nv.getTenDangNhap();
+            scope = buildScope(nv);
+        }else {
+            throw new RuntimeException("Invalid user type");
+        }
+
+
         JWSHeader jwsHeader= new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(khachHang.getUserName())
+                .subject(userName)
                 .issuer("stewie.vn")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope",buildScope(khachHang))
+                .claim("scope",scope)
                 .build();
 
         Payload payload=new Payload(jwtClaimsSet.toJSONObject());
@@ -178,13 +211,26 @@ public class AuthenticationService {
         }
         return jwsObject.serialize();
     }
-    private String buildScope(KhachHang khachHang) {
+    private String buildScope(Object user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-        if(!CollectionUtils.isEmpty(khachHang.getRoles()))
-            khachHang.getRoles().forEach(stringJoiner::add);
-        return stringJoiner.toString();
 
+        if (user instanceof KhachHang kh) {
+            if (!CollectionUtils.isEmpty(kh.getRoles())) {
+                kh.getRoles().forEach(stringJoiner::add);
+            }
+        }
+        else if (user instanceof NhanVien nv) {
+            if (!CollectionUtils.isEmpty(nv.getRoles())) {
+                nv.getRoles().forEach(stringJoiner::add);
+            }
+        }
+        else {
+            throw new RuntimeException("Invalid user type");
+        }
+
+        return stringJoiner.toString();
     }
+
 
     public KhachHang khachHang () {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

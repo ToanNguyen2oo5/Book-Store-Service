@@ -192,6 +192,7 @@ public class DonHangService {
         donHangRepository.save(donHang);
     }
 
+    // lay danh sach don hang cua ban than
     // lay danh sach don hang cua khach hang
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public List<DHResponse> getDHofKH (){

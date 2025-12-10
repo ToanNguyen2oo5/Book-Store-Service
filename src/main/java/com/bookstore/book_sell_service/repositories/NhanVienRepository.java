@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface NhanVienRepository extends JpaRepository<NhanVien,Long> {
     boolean existsByTenDangNhap(String tenDangNhap);
     Optional<NhanVien> findByTenDangNhap(String tenDangNhap);
+
 }
