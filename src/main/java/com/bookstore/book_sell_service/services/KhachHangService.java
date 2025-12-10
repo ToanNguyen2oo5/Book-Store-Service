@@ -50,18 +50,19 @@ public class KhachHangService {
         return khachHangRepository.save(khachHang);
     }
 
-    @PostAuthorize("returnObject.hoTen == authentication.name")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @PostAuthorize("returnObject.tenDangNhap == authentication.name")
     public KhachHang getKhachHang(@PathVariable  String maKH){
         return khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public List<KHResponse> getAllKhachHangs(){
     return khachHangRepository.findAll().stream().
                 map(userMapper::toKHResponse).collect(Collectors.toList());
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public KHResponse updateKH(String maKH, KhachHangUpdateRequest request){
         KhachHang khachHang =khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
@@ -73,6 +74,7 @@ public class KhachHangService {
         return userMapper.toKHResponse(khachHangRepository.save(khachHang));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void deleteKH(String maKH){
         khachHangRepository.deleteById(maKH);
     }

@@ -27,7 +27,7 @@ public class DoanhThu_ThongKe_BaoCaoAService {
     DonHangRepository donHangRepository;
     SachRepository sachRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ThongKeResponse thongKeResponse (){
 
         Pageable top1 = PageRequest.of(0,1);

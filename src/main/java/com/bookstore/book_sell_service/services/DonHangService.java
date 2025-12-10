@@ -141,7 +141,7 @@ public class DonHangService {
     }
 
     // lay danh sach cac don hang tu admin
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public List<DHResponse> getALLDonHang(){
         List<DonHang> donHangList = donHangRepository.findAll();
 
@@ -162,7 +162,7 @@ public class DonHangService {
 
 
     // xem chi tiet don hang
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public DHResponse getDonHang(Long maDH){
         DonHang donHang = donHangRepository.findById(maDH)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
@@ -180,7 +180,7 @@ public class DonHangService {
     }
 
     // cap nhat trang thai don hang
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void updateTrangThai(UpdateTrangThai updateTrangThai)
     {
         DonHang donHang =  donHangRepository.findById(updateTrangThai.getMaDonHang())
@@ -193,6 +193,7 @@ public class DonHangService {
     }
 
     // lay danh sach don hang cua khach hang
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public List<DHResponse> getDHofKH (){
         KhachHang khachHang = authenticationService.khachHang();
         List<DonHang> donHangList = donHangRepository.findAllByKhachHang_maKH(khachHang.getMaKH());

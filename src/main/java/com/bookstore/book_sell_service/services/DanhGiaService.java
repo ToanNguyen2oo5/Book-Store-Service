@@ -55,16 +55,16 @@ public class DanhGiaService {
 
         return danhGiaRepository.save(danhGia);
     }
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public List<DanhGiaResponse> getAllDanhGia(){
        return danhGiaRepository.findALLDanhGia();
     }
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public List<DanhGiaResponse> getAllByMaSach(Long maSach){
         return danhGiaRepository.findALLDanhGiaByMaSach(maSach);
     }
 
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void deleteBL(Long maDanhGia)
     {
         danhGiaRepository.deleteById(maDanhGia);

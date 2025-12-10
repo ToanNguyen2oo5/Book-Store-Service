@@ -24,13 +24,13 @@ public class SachService {
     SachMapper sachMapper;
 
     // get all sach theo khoang gia hoac sap xep theo gia giam dan hay tang dan
-    @PreAuthorize("isAuthenticated()")
+
     public List<Sach> getAllSachs(SachFilterRequest request){
         return sachRepository.findAll
                 (SachSpecification.filterByPrice(request.getMinPrice(),request.getMaxPrice(),request.getOrderBy(),request.getOrder()));
     }
 
-    @PreAuthorize("isAuthenticated()")
+
     public SachResponse getSach (@PathVariable  Long maSach){
         return sachMapper.toSachResponse(sachRepository.findById(maSach)
                 .orElseThrow(()->new RuntimeException("book not found")));
@@ -42,6 +42,7 @@ public class SachService {
             sachMapper.updateSach(sach,request);
             return sachMapper.toSachResponse(sachRepository.save(sach));
     }
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void deleteSach(Long maSach){
         sachRepository.deleteById(maSach);
     }
