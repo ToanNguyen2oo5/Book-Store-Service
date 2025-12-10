@@ -94,8 +94,6 @@ public class DonHangService {
         donHang.setKhachHang(khachHangRepository.findById(request.getMaKH())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng")));
 
-        donHang.setNhanVien(nhanVienRepository.findById(request.getMaNV())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên")));
         donHang.setNgayDat(LocalDate.now());
         if (giamGia != null) {
             donHang.setGiamGia(giamGia);
@@ -183,11 +181,14 @@ public class DonHangService {
     //@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void updateTrangThai(UpdateTrangThai updateTrangThai)
     {
+        NhanVien nhanVien = authenticationService.nhanVien();
+
         DonHang donHang =  donHangRepository.findById(updateTrangThai.getMaDonHang())
                 .orElseThrow(() -> new RuntimeException("Ko tim thay don hang"));
 
         TrangThai tt = TrangThai.valueOf(updateTrangThai.getTrangThaiMoi());
         donHang.setTrangThai(tt.getMoTa());
+        donHang.setNhanVien(nhanVien);
 
         donHangRepository.save(donHang);
     }

@@ -77,8 +77,6 @@ public class AuthenticationService {
     }
 
    public AuthenticationResponse authenticate(AuthenticationRequest request){
-//    var user =khachHangRepository.findByUserName(request.getUserName())
-//            .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Object user;
         try {
@@ -197,7 +195,7 @@ public class AuthenticationService {
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope",scope)
+                .claim("scope", scope)
                 .build();
 
         Payload payload=new Payload(jwtClaimsSet.toJSONObject());
@@ -238,4 +236,11 @@ public class AuthenticationService {
         return khachHangRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
+    public NhanVien nhanVien () {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        return nhanVienRepository.findByTenDangNhap(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    }
+
 }

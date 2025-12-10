@@ -20,7 +20,6 @@ public class DonHangCreate {
      String trangThai;
      LocalDate ngayDat;
      String soDTNguoiNhan;
-     Long maNV;
      Long maGiamGia;
      String maKH;
      Long maPTTT;

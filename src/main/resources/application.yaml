@@ -13,7 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto:  update
       order_inserts: true
       order_updates: true
       format_sql: true
