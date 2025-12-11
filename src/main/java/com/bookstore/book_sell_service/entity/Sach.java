@@ -1,5 +1,7 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,6 +50,7 @@ public class Sach {
     private List<ChiTietGioHang> chiTietGioHangList;
 
     @OneToMany(mappedBy = "sach")
+    @JsonManagedReference(value = "sach-chitiet")
     private List<DonHangChiTiet> donHangChiTietList;
 
     @ManyToMany

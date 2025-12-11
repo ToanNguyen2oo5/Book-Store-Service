@@ -53,7 +53,7 @@ public class DonHang {
     private GiamGia giamGia;
 
     @OneToMany(mappedBy = "donHang")
-    @JsonManagedReference
+    @JsonManagedReference(value = "donhang-chitiet")
     private List<DonHangChiTiet> chiTietDonHangList;
 
 }

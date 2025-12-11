@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,12 +22,13 @@ public class DonHangChiTiet {
     @ManyToOne
     @MapsId("maDonHang")
     @JoinColumn(name = "ma_don_hang")
+    @JsonBackReference(value = "donhang-chitiet")
     private DonHang donHang;
 
     @ManyToOne
     @MapsId("maSach")
     @JoinColumn(name = "ma_sach")
-    @JsonIgnore
+    @JsonBackReference(value = "sach-chitiet")
     private Sach sach;
 
 

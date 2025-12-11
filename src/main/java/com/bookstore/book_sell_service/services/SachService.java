@@ -11,12 +11,14 @@ import com.bookstore.book_sell_service.specification.SachSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -27,10 +29,13 @@ public class SachService {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public SachResponse createSach(SachCreationalRequest request){
+        log.info("chay 1 ");
         if(sachRepository.existsByTenSach(request.getTenSach())){
             throw new RuntimeException("Da co sach nay");
         }
+        log.info("chay 2 ");
         Sach sach = sachMapper.toSach(request);
+        log.info("chay 3 ");
         return sachMapper.toSachResponse(sachRepository.save(sach));
 
     }
