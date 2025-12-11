@@ -12,6 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NVResponse {
+    private String maNV;
     private String tenDangNhap;
     private String matKhau;
     private String hoTen;

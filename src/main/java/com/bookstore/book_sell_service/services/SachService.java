@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.services;
 
+import com.bookstore.book_sell_service.dto.request.Sach.SachCreationalRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachFilterRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.SachResponse;
@@ -23,6 +24,16 @@ public class SachService {
     SachRepository sachRepository;
     SachMapper sachMapper;
 
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public SachResponse createSach(SachCreationalRequest request){
+        if(sachRepository.existsByTenSach(request.getTenSach())){
+            throw new RuntimeException("Da co sach nay");
+        }
+        Sach sach = sachMapper.toSach(request);
+        return sachMapper.toSachResponse(sachRepository.save(sach));
+
+    }
     // get all sach theo khoang gia hoac sap xep theo gia giam dan hay tang dan
 
     public List<Sach> getAllSachs(SachFilterRequest request){

@@ -1,6 +1,7 @@
 package com.bookstore.book_sell_service.controller;
 
 import com.bookstore.book_sell_service.dto.request.ApiResponse;
+import com.bookstore.book_sell_service.dto.request.Sach.SachCreationalRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachFilterRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.SachResponse;
@@ -23,6 +24,17 @@ public class SachController {
 
     SachService sachService;
     SachSearchService sachSearchService;
+
+
+    @PostMapping
+    public ApiResponse<SachResponse> createSach(@RequestBody SachCreationalRequest request){
+        return ApiResponse.<SachResponse>builder()
+                .message("them sach thanh cong")
+                .result(sachService.createSach(request))
+                .build();
+
+    }
+
     @PostMapping ("/request-sach")
     public ApiResponse<List<Sach>> getAllSachs(@RequestBody SachFilterRequest request){
         List<Sach> sachList = sachService.getAllSachs(request);

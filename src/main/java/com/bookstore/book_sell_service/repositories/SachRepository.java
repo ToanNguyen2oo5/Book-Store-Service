@@ -20,4 +20,5 @@ public interface SachRepository extends JpaRepository<Sach,Long>, JpaSpecificati
     List<ThongKeSach> thongKeTKT();
 
 
+    boolean existsByTenSach(String tenSach);
 }

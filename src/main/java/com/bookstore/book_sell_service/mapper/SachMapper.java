@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.mapper;
 
+import com.bookstore.book_sell_service.dto.request.Sach.SachCreationalRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.SachResponse;
 import com.bookstore.book_sell_service.entity.Sach;
@@ -9,6 +10,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface SachMapper {
     SachResponse toSachResponse(Sach sach);
-
+    Sach toSach(SachCreationalRequest request);
     void updateSach(@MappingTarget Sach sach,SachUpdateRequest request);
 }

@@ -51,7 +51,6 @@ public class KhachHangService {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
-    @PostAuthorize("returnObject.tenDangNhap == authentication.name")
     public KhachHang getKhachHang(@PathVariable  String maKH){
         return khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));

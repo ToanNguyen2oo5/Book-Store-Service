@@ -4,7 +4,6 @@ import com.bookstore.book_sell_service.dto.request.DonHang.DonHangCreate;
 import com.bookstore.book_sell_service.dto.request.DonHang.UpdateTrangThai;
 import com.bookstore.book_sell_service.dto.responses.DHResponse;
 import com.bookstore.book_sell_service.dto.responses.KHResponse;
-import com.bookstore.book_sell_service.dto.responses.ThongKeResponse;
 import com.bookstore.book_sell_service.entity.*;
 import com.bookstore.book_sell_service.enums.TrangThai;
 import com.bookstore.book_sell_service.mapper.DonHangMapper;
@@ -20,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service

@@ -13,8 +13,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SachUpdateRequest {
-//    private Long maSach;
+public class SachCreationalRequest {
+    //    private Long maSach;
     private String tenSach;
     private Double donGia;
     private String donViTinh;
@@ -23,5 +23,5 @@ public class SachUpdateRequest {
     private String moTa;
     private LoaiSach loaiSach;
     private NhaXuatBan nhaXuatBan;
-    private List<HinhAnh> hinhAnhList;
+    //private List<HinhAnh> hinhAnhList;
 }
