@@ -1,6 +1,7 @@
 package com.bookstore.book_sell_service.services;
 
 import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangCreationRequest;
+import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdatePassWordRequest;
 import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.entity.KhachHang;
@@ -61,16 +62,32 @@ public class KhachHangService {
     return khachHangRepository.findAll().stream().
                 map(userMapper::toKHResponse).collect(Collectors.toList());
     }
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'USER')")
     public KHResponse updateKH(String maKH, KhachHangUpdateRequest request){
         KhachHang khachHang =khachHangRepository.findById(maKH)
                 .orElseThrow(() -> new RuntimeException("user not found"));
         userMapper.updateKH(khachHang, request);
-        khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
+//        khachHang.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         QuanHuyen quanHuyen = quanHuyenRepository.findById(request.getMaQuanHuyen())
                 .orElseThrow(() -> new RuntimeException("Loi"));
         khachHang.setQuanHuyen(quanHuyen);
         return userMapper.toKHResponse(khachHangRepository.save(khachHang));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'USER')")
+    public void updatePassWord (String maKH, KhachHangUpdatePassWordRequest request){
+        KhachHang khachHang =khachHangRepository.findById(maKH)
+                .orElseThrow(() -> new RuntimeException("user not found"));
+
+        boolean check = passwordEncoder.matches(request.getMatKhau(),khachHang.getMatKhau());
+        boolean check1 = request.getNewPassWord().equals(request.getVerifynewPassWord());
+
+        if (!check || !check1){
+            throw new RuntimeException("Vui long nhap lai mat khau");
+        }
+        PasswordEncoder passwordEncoder1 = new BCryptPasswordEncoder(10);
+        khachHang.setMatKhau(passwordEncoder1.encode(request.getNewPassWord()));
+        khachHangRepository.save(khachHang);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")

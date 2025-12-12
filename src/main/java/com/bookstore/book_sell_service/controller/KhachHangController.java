@@ -2,6 +2,7 @@ package com.bookstore.book_sell_service.controller;
 
 import com.bookstore.book_sell_service.dto.request.ApiResponse;
 import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangCreationRequest;
+import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdatePassWordRequest;
 import com.bookstore.book_sell_service.dto.request.KhachHang.KhachHangUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.entity.KhachHang;
@@ -56,6 +57,14 @@ public class KhachHangController {
             , @RequestBody @Valid KhachHangUpdateRequest request ){
         return ApiResponse.<KHResponse>builder()
                 .result(khachHangService.updateKH(maKH,request))
+                .build();
+    }
+    @PutMapping("/password/{maKH}")
+    public ApiResponse<Void> updatePassWord(@PathVariable String maKH
+            , @RequestBody @Valid KhachHangUpdatePassWordRequest request ){
+        khachHangService.updatePassWord(maKH,request);
+        return ApiResponse.<Void>builder()
+                .message("Da cap nhat thanh cong")
                 .build();
     }
     @DeleteMapping("/{maKH}")

@@ -13,16 +13,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class KhachHangUpdateRequest {
+public class KhachHangUpdatePassWordRequest {
 
-    private String hoTen;
+    private String matKhau;
+    @Size(min=8, message = "INVALID_PASSWORD")
+    @NotBlank(message = "BLANK_PASSWORD")
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*\\d).{8,}$",
+            message = "INVALID_PASSWORD"
+    )
+    private String newPassWord;
+    private String verifynewPassWord;
 
-    @Email(message = "INVALID_EMAIL")
-    private String email;
-    @Column(nullable = false, unique = true)
-    private String soDT;
-    private String diaChi;
 
-    @NotNull(message = "maQuanHuyen is required")
-    private Long maQuanHuyen;
+
 }
