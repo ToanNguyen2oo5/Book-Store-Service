@@ -65,4 +65,11 @@ public class NhanVienController {
         nhanVienService.deleteNhanVien(maNV);
         return "NV has been deleted";
     }
+
+    @GetMapping("/myInfo")
+    ApiResponse<NVResponse> getMyInfo(){
+        return ApiResponse.<NVResponse>builder()
+                .result(nhanVienService.getMyInfo())
+                .build();
+    }
 }

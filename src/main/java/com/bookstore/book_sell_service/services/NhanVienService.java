@@ -2,7 +2,9 @@ package com.bookstore.book_sell_service.services;
 
 import com.bookstore.book_sell_service.dto.request.NhanVien.NhanVienCreationalRequest;
 import com.bookstore.book_sell_service.dto.request.NhanVien.NhanVienUpdateRequest;
+import com.bookstore.book_sell_service.dto.responses.KHResponse;
 import com.bookstore.book_sell_service.dto.responses.NVResponse;
+import com.bookstore.book_sell_service.entity.KhachHang;
 import com.bookstore.book_sell_service.entity.NhanVien;
 import com.bookstore.book_sell_service.enums.Role;
 import com.bookstore.book_sell_service.exception.AppException;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -69,4 +72,11 @@ public class NhanVienService {
         nhanVienRepository.deleteById(maNV);
     }
 
+    public NVResponse getMyInfo(){
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+        NhanVien nhanVien = nhanVienRepository.findByTenDangNhap(name).orElseThrow(
+                ()-> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return nhanVienMapper.toNhanVienResponse(nhanVien);
+    }
 }
