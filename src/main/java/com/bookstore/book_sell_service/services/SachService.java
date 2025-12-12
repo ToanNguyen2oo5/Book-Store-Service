@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -39,9 +40,18 @@ public class SachService {
         return sachMapper.toSachResponse(sachRepository.save(sach));
 
     }
+
+    // Lấy tất cả sách (không lọc) và convert sang Response
+    public List<SachResponse> getAllSachs() {
+        // sachRepository.findAll() là hàm có sẵn của JPA
+        return sachRepository.findAll().stream()
+                .map(sachMapper::toSachResponse)
+                .collect(Collectors.toList());
+    }
+
     // get all sach theo khoang gia hoac sap xep theo gia giam dan hay tang dan
 
-    public List<Sach> getAllSachs(SachFilterRequest request){
+    public List<Sach> getAllSachsByPrice(SachFilterRequest request){
         return sachRepository.findAll
                 (SachSpecification.filterByPrice(request.getMinPrice(),request.getMaxPrice(),request.getOrderBy(),request.getOrder()));
     }
@@ -61,5 +71,15 @@ public class SachService {
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void deleteSach(Long maSach){
         sachRepository.deleteById(maSach);
+    }
+
+    public List<SachResponse> getSachsByLoai(Long maLoai){
+        // Gọi repository để lấy list Entity
+        List<Sach> sachList = sachRepository.findAllByLoaiSach_MaLoai(maLoai);
+
+        // Convert list Entity sang list Response bằng Mapper
+        return sachList.stream()
+                .map(sachMapper::toSachResponse)
+                .collect(Collectors.toList());
     }
 }

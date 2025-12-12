@@ -1,5 +1,6 @@
 package com.bookstore.book_sell_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,5 +26,6 @@ public class TacGia {
     private String tenTG;
 
     @ManyToMany(mappedBy = "tacGiaSet")
+    @JsonIgnore
     private Set<Sach> sachSet;
 }

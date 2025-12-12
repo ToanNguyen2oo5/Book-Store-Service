@@ -35,9 +35,17 @@ public class SachController {
 
     }
 
+    @GetMapping
+    public ApiResponse<List<SachResponse>> getAllBooks() {
+        return ApiResponse.<List<SachResponse>>builder()
+                .message("Lấy danh sách tất cả sách thành công")
+                .result(sachService.getAllSachs())
+                .build();
+    }
+
     @PostMapping ("/request-sach")
-    public ApiResponse<List<Sach>> getAllSachs(@RequestBody SachFilterRequest request){
-        List<Sach> sachList = sachService.getAllSachs(request);
+    public ApiResponse<List<Sach>> getAllSachsByPrice(@RequestBody SachFilterRequest request){
+        List<Sach> sachList = sachService.getAllSachsByPrice(request);
         return ApiResponse.<List<Sach>>builder()
                 .message("Lay thanh cong")
                 .result(sachList)
@@ -83,5 +91,13 @@ public class SachController {
     public String deleteSach(@PathVariable Long maSach){
         sachService.deleteSach(maSach);
         return "book has been deleted";
+    }
+
+    @GetMapping("/the-loai/{maLoai}")
+    public ApiResponse<List<SachResponse>> getSachsByTheLoai(@PathVariable Long maLoai){
+        return ApiResponse.<List<SachResponse>>builder()
+                .message("Lấy danh sách sách theo thể loại thành công")
+                .result(sachService.getSachsByLoai(maLoai))
+                .build();
     }
 }

@@ -19,6 +19,7 @@ public interface SachRepository extends JpaRepository<Sach,Long>, JpaSpecificati
             "WHERE ct.soLuongCo < 20")
     List<ThongKeSach> thongKeTKT();
 
+    List<Sach> findAllByLoaiSach_MaLoai(Long maLoai);
 
     boolean existsByTenSach(String tenSach);
 }
