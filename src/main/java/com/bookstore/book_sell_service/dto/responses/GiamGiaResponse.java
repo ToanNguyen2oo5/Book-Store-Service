@@ -14,5 +14,6 @@ public class GiamGiaResponse {
     LocalDate ngayBatDau;
     LocalDate ngayKetThuc;
     Double chietKhau;
+    Double donHangToiThieu;
     String moTa;
 }

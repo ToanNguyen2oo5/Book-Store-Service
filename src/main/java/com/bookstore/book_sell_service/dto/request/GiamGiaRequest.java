@@ -13,5 +13,6 @@ public class GiamGiaRequest {
     LocalDate ngayBatDau;
     LocalDate ngayKetThuc;
     Double chietKhau;
+    Double donHangToiThieu;
     String moTa;
 }

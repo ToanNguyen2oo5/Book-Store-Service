@@ -64,19 +64,33 @@ public class DonHangService {
         GiamGia giamGia = null;
         if (request.getMaGiamGia() != null) {
             giamGia = giamGiaRepository.findById(request.getMaGiamGia())
-                    .orElse(null);
+                    .orElseThrow(() -> new RuntimeException("Mã giảm giá không tồn tại")); // Nên ném lỗi rõ ràng
 
             if (giamGia != null) {
-                LocalDate ngayHienTai = request.getNgayDat();
-                boolean check = (ngayHienTai.isAfter(giamGia.getNgayBatDau()) || ngayHienTai.isEqual(giamGia.getNgayBatDau()))
+                LocalDate ngayHienTai = request.getNgayDat(); // Hoặc LocalDate.now()
+
+                // 1. Kiểm tra ngày hiệu lực
+                boolean checkThoiGian = (ngayHienTai.isAfter(giamGia.getNgayBatDau()) || ngayHienTai.isEqual(giamGia.getNgayBatDau()))
                         && (ngayHienTai.isEqual(giamGia.getNgayKetThuc()) || ngayHienTai.isBefore(giamGia.getNgayKetThuc()));
 
-                if (check) {
-                    tongTien = tongTien * (100 - giamGia.getChietKhau()) / 100;
+                // 2. Kiểm tra điều kiện tổng tiền đơn hàng (Logic Mới)
+                // Nếu donHangToiThieu là null thì coi như là 0 (luôn thỏa mãn)
+                double minOrder = (giamGia.getDonHangToiThieu() == null) ? 0 : giamGia.getDonHangToiThieu();
+                boolean checkTongTien = tongTien >= minOrder;
+
+                if (checkThoiGian) {
+                    if (checkTongTien) {
+                        // Áp dụng giảm giá (Công thức hiện tại của bạn là giảm theo %)
+                        tongTien = tongTien * (100 - giamGia.getChietKhau()) / 100;
+                    } else {
+                        // Tùy chọn: Ném lỗi nếu đơn hàng chưa đủ điều kiện
+                        throw new RuntimeException("Đơn hàng chưa đạt giá trị tối thiểu: " + minOrder + " để dùng mã này.");
+                    }
+                } else {
+                    throw new RuntimeException("Mã giảm giá đã hết hạn hoặc chưa bắt đầu.");
                 }
             }
         }
-
         tongTien = tongTien + request.getPhiGiaoHang();
 
         // Tạo đơn hàng

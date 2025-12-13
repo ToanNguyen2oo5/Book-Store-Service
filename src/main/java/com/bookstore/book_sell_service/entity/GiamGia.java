@@ -24,6 +24,7 @@ public class GiamGia {
     private Double chietKhau;
     private String moTa;
 
+    Double donHangToiThieu;
     @OneToMany(mappedBy = "giamGia")
     @JsonIgnore
     private List<DonHang> donHangList;
