@@ -21,7 +21,6 @@ public class DonHangCreate {
      LocalDate ngayDat;
      String soDTNguoiNhan;
      Long maGiamGia;
-     String maKH;
      Long maPTTT;
      Long maQuanHuyen;
 }

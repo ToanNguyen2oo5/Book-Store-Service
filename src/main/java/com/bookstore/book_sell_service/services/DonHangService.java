@@ -67,7 +67,7 @@ public class DonHangService {
                     .orElseThrow(() -> new RuntimeException("Mã giảm giá không tồn tại")); // Nên ném lỗi rõ ràng
 
             if (giamGia != null) {
-                LocalDate ngayHienTai = request.getNgayDat(); // Hoặc LocalDate.now()
+                LocalDate ngayHienTai = LocalDate.now(); // Hoặc LocalDate.now()
 
                 // 1. Kiểm tra ngày hiệu lực
                 boolean checkThoiGian = (ngayHienTai.isAfter(giamGia.getNgayBatDau()) || ngayHienTai.isEqual(giamGia.getNgayBatDau()))
@@ -101,9 +101,6 @@ public class DonHangService {
 
         donHang.setPhuongThucThanhToan(ptttRepository.findById(request.getMaPTTT())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy phương thức thanh toán")));
-
-        donHang.setKhachHang(khachHangRepository.findById(request.getMaKH())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng")));
 
         donHang.setNgayDat(LocalDate.now());
         if (giamGia != null) {

@@ -60,13 +60,13 @@ public class GioHangService {
                 chiTietGioHangRepository.findByGioHangAndSach(gioHang, sach);
 
         if (chiTietOptional.isEmpty()) {
-            // ✅ Tạo ID trước
+            //  Tạo ID trước
             ChiTietGioHangId chiTietId = new ChiTietGioHangId(
                     gioHang.getMaGioHang(),
                     sach.getMaSach()
             );
 
-            // ✅ Tạo chi tiết mới VÀ SET ID
+            //  Tạo chi tiết mới VÀ SET ID
 
             ChiTietGioHang newChiTiet = ChiTietGioHang.builder()
                     .id(chiTietId)  // ← QUAN TRỌNG: Phải set ID

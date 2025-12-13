@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PTTTRepository extends JpaRepository<PhuongThucThanhToan,Long> {
+
 }
