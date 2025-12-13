@@ -21,10 +21,10 @@ public class DonHangController {
     DonHangService donHangService;
 
     @PostMapping("/createDH")
-    public ApiResponse<Void> crateDonHang (@RequestBody DonHangCreate donHangCreate){
-        donHangService.createDonHang(donHangCreate);
-        return ApiResponse.<Void>builder()
+    public ApiResponse<DHResponse> createDonHang(@RequestBody DonHangCreate donHangCreate){
+        return ApiResponse.<DHResponse>builder()
                 .message("oko")
+                .result(donHangService.createDonHang(donHangCreate))
                 .build();
     }
     @GetMapping("/getALLDH")

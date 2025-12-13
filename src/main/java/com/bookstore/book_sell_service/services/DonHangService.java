@@ -42,7 +42,7 @@ public class DonHangService {
     UserMapper userMapper;
 
     @Transactional // Thêm transaction để đảm bảo tính toàn vẹn dữ liệu
-    public void createDonHang(DonHangCreate request) {
+    public DHResponse createDonHang(DonHangCreate request) {
 
         KhachHang khachHang = authenticationService.khachHang();
 
@@ -144,6 +144,7 @@ public class DonHangService {
         chiTietGioHangRepository.deleteByGioHang_MaGioHang(gioHang.getMaGioHang());
 
         gioHangRepository.save(gioHang);
+        return donHangMapper.togetDH(donHangRepository.save(donHang));
     }
 
     // lay danh sach cac don hang tu admin
@@ -158,8 +159,8 @@ public class DonHangService {
 
                     DHResponse dhResponse = donHangMapper.togetDH(ct);
 
-                    // Gán KHResponse vào DHResponse
-                    dhResponse.setKhResponse(khResponse);
+//                    // Gán KHResponse vào DHResponse
+//                    dhResponse.setKhResponse(khResponse);
 
                     return dhResponse;
                 })
@@ -179,8 +180,8 @@ public class DonHangService {
 
         DHResponse dhResponse = donHangMapper.togetDH(donHang);
 
-        // Gán KHResponse vào DHResponse
-        dhResponse.setKhResponse(khResponse);
+//        // Gán KHResponse vào DHResponse
+//        dhResponse.setKhResponse(khResponse);
 
         return dhResponse;
     }
@@ -214,9 +215,9 @@ public class DonHangService {
                     KHResponse khResponse = userMapper.toKHResponse(kh);
 
                     DHResponse dhResponse = donHangMapper.togetDH(ct);
-
-                    // Gán KHResponse vào DHResponse
-                    dhResponse.setKhResponse(khResponse);
+//
+//                    // Gán KHResponse vào DHResponse
+//                    dhResponse.setKhResponse(khResponse);
 
                     return dhResponse;
                 })

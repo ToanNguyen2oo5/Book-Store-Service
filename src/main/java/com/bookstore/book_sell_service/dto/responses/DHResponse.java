@@ -34,15 +34,12 @@ public class DHResponse {
         @JsonIgnoreProperties("donHangList") // Bỏ qua donHangList khi serialize
         private PhuongThucThanhToan phuongThucThanhToan;
 
-
-        private KHResponse khResponse;
-
         @JsonIgnoreProperties("donHangList")
         private NhanVien nhanVien;
 
         private GiamGia giamGia;
 
-        @JsonIgnoreProperties("donHang") // Bỏ qua tham chiếu ngược về đơn hàng
-        private List<DonHangChiTiet> chiTietDonHangList;
+//        @JsonIgnoreProperties("donHang") // Bỏ qua tham chiếu ngược về đơn hàng
+//        private List<DonHangChiTiet> chiTietDonHangList;
 }
 
