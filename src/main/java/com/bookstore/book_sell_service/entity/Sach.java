@@ -61,5 +61,6 @@ public class Sach {
     )
     private Set<TacGia> tacGiaSet;
 
-
+    @OneToMany
+    private List<SachGiamGia> sachGiamGiaList;
 }
