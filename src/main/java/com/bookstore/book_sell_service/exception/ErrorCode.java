@@ -17,6 +17,7 @@ public enum ErrorCode {
     INVALID_EMAIL(108,"invalid email",HttpStatus.BAD_REQUEST),
     UNAUTHORIZED(109,"you do not have permission",HttpStatus.FORBIDDEN),
     DUPLICATE_ENTRY(110, "username, email or SĐT has been used", HttpStatus.BAD_REQUEST),
+    INVALID_ARGUMENT(111,"Trang thai khong ton tai",HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

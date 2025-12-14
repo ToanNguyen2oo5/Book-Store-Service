@@ -45,7 +45,7 @@ public class DonHangController {
     public ApiResponse<Void> updateTT(@RequestBody UpdateTrangThai updateTrangThai){
         donHangService.updateTrangThai(updateTrangThai);
         return ApiResponse.<Void>builder()
-                .message("oko")
+                .message("cập nhật đơn hàng thành công")
                 .build();
     }
     // danh sach don hang cua khach hang

@@ -12,6 +12,6 @@ import lombok.experimental.FieldDefaults;
 public class UpdateTrangThai {
 
     Long maDonHang;
-    String trangThaiMoi;
+    String trangThai;
 
 }
