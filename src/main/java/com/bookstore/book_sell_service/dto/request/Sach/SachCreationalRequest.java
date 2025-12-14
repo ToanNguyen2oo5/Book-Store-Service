@@ -3,12 +3,15 @@ package com.bookstore.book_sell_service.dto.request.Sach;
 import com.bookstore.book_sell_service.entity.HinhAnh;
 import com.bookstore.book_sell_service.entity.LoaiSach;
 import com.bookstore.book_sell_service.entity.NhaXuatBan;
+import com.bookstore.book_sell_service.entity.TacGia;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,6 +24,7 @@ public class SachCreationalRequest {
     private Integer soLuongCo;
     private String khoHang;
     private String moTa;
+    private Set<Long> tacGiaIds;
     private LoaiSach loaiSach;
     private NhaXuatBan nhaXuatBan;
     //private List<HinhAnh> hinhAnhList;

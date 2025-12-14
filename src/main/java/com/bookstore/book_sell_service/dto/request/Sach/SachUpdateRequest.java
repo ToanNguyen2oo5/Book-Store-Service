@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -24,4 +26,5 @@ public class SachUpdateRequest {
     private LoaiSach loaiSach;
     private NhaXuatBan nhaXuatBan;
     private List<HinhAnh> hinhAnhList;
+    private Set<Long> tacGiaIds;
 }

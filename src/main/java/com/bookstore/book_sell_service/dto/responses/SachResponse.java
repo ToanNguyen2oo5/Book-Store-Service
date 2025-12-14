@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -25,7 +26,7 @@ public class SachResponse {
     private String moTa;
     private LoaiSach loaiSach;
     private NhaXuatBan nhaXuatBan;
-    private TacGia tacGia;
+    private Set<TacGia> tacGiaSet;
     private List<HinhAnh> hinhAnhList;
 
 }

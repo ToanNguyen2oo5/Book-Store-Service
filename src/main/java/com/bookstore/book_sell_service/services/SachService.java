@@ -4,9 +4,13 @@ import com.bookstore.book_sell_service.dto.request.Sach.SachCreationalRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachFilterRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.SachResponse;
+import com.bookstore.book_sell_service.dto.responses.TacGiaResponse;
 import com.bookstore.book_sell_service.entity.Sach;
+import com.bookstore.book_sell_service.entity.TacGia;
 import com.bookstore.book_sell_service.mapper.SachMapper;
+import com.bookstore.book_sell_service.mapper.TacGiaMapper;
 import com.bookstore.book_sell_service.repositories.SachRepository;
+import com.bookstore.book_sell_service.repositories.TacGiaRepository;
 import com.bookstore.book_sell_service.specification.SachSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +20,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,19 +30,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SachService {
+    private final TacGiaMapper tacGiaMapper;
     SachRepository sachRepository;
     SachMapper sachMapper;
-
+    TacGiaRepository tacGiaRepository;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public SachResponse createSach(SachCreationalRequest request){
-        log.info("chay 1 ");
         if(sachRepository.existsByTenSach(request.getTenSach())){
             throw new RuntimeException("Da co sach nay");
         }
-        log.info("chay 2 ");
         Sach sach = sachMapper.toSach(request);
-        log.info("chay 3 ");
+        List<TacGia> tacGiaSet = tacGiaRepository.findAllById(request.getTacGiaIds());
+        sach.setTacGiaSet(new HashSet<>(tacGiaSet));
+
         return sachMapper.toSachResponse(sachRepository.save(sach));
 
     }
@@ -62,11 +69,22 @@ public class SachService {
                 .orElseThrow(()->new RuntimeException("book not found")));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public SachResponse updateSach(SachUpdateRequest request, Long maSach){
-            Sach sach = sachRepository.findById(maSach).orElseThrow(()-> new RuntimeException("book not found"));
-            sachMapper.updateSach(sach,request);
-            return sachMapper.toSachResponse(sachRepository.save(sach));
+        Sach sach = sachRepository.findById(maSach)
+                .orElseThrow(()-> new RuntimeException("book not found"));
+
+        sachMapper.updateSach(sach, request);
+
+        // 4. Logic Update Tác Giả
+        if (request.getTacGiaIds() != null) {
+            // findAllById: Lấy danh sách tác giả MỚI dựa trên ID được chọn
+            List<TacGia> selectedAuthors = tacGiaRepository.findAllById(request.getTacGiaIds());
+
+            // Ghi đè danh sách cũ bằng danh sách mới được chọn
+            sach.setTacGiaSet(new HashSet<>(selectedAuthors));
+        }
+
+        return sachMapper.toSachResponse(sachRepository.save(sach));
     }
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void deleteSach(Long maSach){
