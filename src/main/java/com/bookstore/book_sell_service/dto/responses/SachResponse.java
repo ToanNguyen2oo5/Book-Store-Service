@@ -3,6 +3,7 @@ package com.bookstore.book_sell_service.dto.responses;
 import com.bookstore.book_sell_service.entity.HinhAnh;
 import com.bookstore.book_sell_service.entity.LoaiSach;
 import com.bookstore.book_sell_service.entity.NhaXuatBan;
+import com.bookstore.book_sell_service.entity.TacGia;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class SachResponse {
     private String moTa;
     private LoaiSach loaiSach;
     private NhaXuatBan nhaXuatBan;
+    private TacGia tacGia;
     private List<HinhAnh> hinhAnhList;
 
 }
