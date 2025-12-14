@@ -27,6 +27,6 @@ public class SachResponse {
     private LoaiSach loaiSach;
     private NhaXuatBan nhaXuatBan;
     private Set<TacGia> tacGiaSet;
-    private List<HinhAnh> hinhAnhList;
+   // private List<HinhAnh> hinhAnhList;
 
 }

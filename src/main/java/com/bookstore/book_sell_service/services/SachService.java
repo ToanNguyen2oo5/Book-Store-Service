@@ -4,13 +4,15 @@ import com.bookstore.book_sell_service.dto.request.Sach.SachCreationalRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachFilterRequest;
 import com.bookstore.book_sell_service.dto.request.Sach.SachUpdateRequest;
 import com.bookstore.book_sell_service.dto.responses.SachResponse;
-import com.bookstore.book_sell_service.dto.responses.TacGiaResponse;
+import com.bookstore.book_sell_service.entity.NhaXuatBan;
 import com.bookstore.book_sell_service.entity.Sach;
 import com.bookstore.book_sell_service.entity.TacGia;
 import com.bookstore.book_sell_service.mapper.SachMapper;
 import com.bookstore.book_sell_service.mapper.TacGiaMapper;
+import com.bookstore.book_sell_service.repositories.NhaXuatBanRepository;
 import com.bookstore.book_sell_service.repositories.SachRepository;
 import com.bookstore.book_sell_service.repositories.TacGiaRepository;
+import com.bookstore.book_sell_service.repositories.TheLoaiRepository;
 import com.bookstore.book_sell_service.specification.SachSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,13 +35,24 @@ public class SachService {
     SachRepository sachRepository;
     SachMapper sachMapper;
     TacGiaRepository tacGiaRepository;
+    TheLoaiRepository theLoaiRepository;
+    NhaXuatBanRepository nhaXuatBanRepository;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public SachResponse createSach(SachCreationalRequest request){
         if(sachRepository.existsByTenSach(request.getTenSach())){
             throw new RuntimeException("Da co sach nay");
         }
+
+
+        NhaXuatBan nhaXuatBan = nhaXuatBanRepository.findById(request.getNhaXuatBan().getMaNXB())
+                .orElseThrow(()-> new RuntimeException("Khong thay ma loai"));
+
         Sach sach = sachMapper.toSach(request);
+        sach.setLoaiSach(theLoaiRepository.findById(request.getLoaiSach().getMaLoai())
+                .orElseThrow(()-> new RuntimeException("Khong thay ma loai")));
+
+        sach.setNhaXuatBan(nhaXuatBan);
         List<TacGia> tacGiaSet = tacGiaRepository.findAllById(request.getTacGiaIds());
         sach.setTacGiaSet(new HashSet<>(tacGiaSet));
 
