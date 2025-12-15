@@ -37,6 +37,7 @@ public class SachService {
     TacGiaRepository tacGiaRepository;
     TheLoaiRepository theLoaiRepository;
     NhaXuatBanRepository nhaXuatBanRepository;
+    SearchSyncService searchSyncService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public SachResponse createSach(SachCreationalRequest request){
@@ -56,7 +57,9 @@ public class SachService {
         List<TacGia> tacGiaSet = tacGiaRepository.findAllById(request.getTacGiaIds());
         sach.setTacGiaSet(new HashSet<>(tacGiaSet));
 
-        return sachMapper.toSachResponse(sachRepository.save(sach));
+        Sach savedSach = sachRepository.save(sach);
+        searchSyncService.syncSach(savedSach.getMaSach());
+        return sachMapper.toSachResponse(savedSach);
 
     }
 
@@ -103,6 +106,7 @@ public class SachService {
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void deleteSach(Long maSach){
         sachRepository.deleteById(maSach);
+        searchSyncService.deleteSachFromIndex(maSach);
     }
 
     public List<SachResponse> getSachsByLoai(Long maLoai){

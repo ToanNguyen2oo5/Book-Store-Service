@@ -1,6 +1,5 @@
 package com.bookstore.book_sell_service.dto.responses;
 
-import com.bookstore.book_sell_service.entity.HinhAnh;
 import com.bookstore.book_sell_service.entity.LoaiSach;
 import com.bookstore.book_sell_service.entity.NhaXuatBan;
 import com.bookstore.book_sell_service.entity.TacGia;
@@ -9,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
