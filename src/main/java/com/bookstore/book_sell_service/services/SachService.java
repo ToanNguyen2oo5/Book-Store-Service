@@ -45,11 +45,11 @@ public class SachService {
             throw new RuntimeException("Da co sach nay");
         }
 
-
+        Sach sach = sachMapper.toSach(request);
         NhaXuatBan nhaXuatBan = nhaXuatBanRepository.findById(request.getNhaXuatBan().getMaNXB())
                 .orElseThrow(()-> new RuntimeException("Khong thay ma loai"));
 
-        Sach sach = sachMapper.toSach(request);
+
         sach.setLoaiSach(theLoaiRepository.findById(request.getLoaiSach().getMaLoai())
                 .orElseThrow(()-> new RuntimeException("Khong thay ma loai")));
 
@@ -92,14 +92,17 @@ public class SachService {
 
         sachMapper.updateSach(sach, request);
 
-        // 4. Logic Update Tác Giả
-        if (request.getTacGiaIds() != null) {
-            // findAllById: Lấy danh sách tác giả MỚI dựa trên ID được chọn
-            List<TacGia> selectedAuthors = tacGiaRepository.findAllById(request.getTacGiaIds());
+        NhaXuatBan nhaXuatBan = nhaXuatBanRepository.findById(request.getNhaXuatBan().getMaNXB())
+                .orElseThrow(()-> new RuntimeException("Khong thay ma loai"));
 
-            // Ghi đè danh sách cũ bằng danh sách mới được chọn
-            sach.setTacGiaSet(new HashSet<>(selectedAuthors));
-        }
+        sach.setLoaiSach(theLoaiRepository.findById(request.getLoaiSach().getMaLoai())
+                .orElseThrow(()-> new RuntimeException("Khong thay ma loai")));
+
+        sach.setNhaXuatBan(nhaXuatBan);
+
+
+        List<TacGia> tacGiaSet = tacGiaRepository.findAllById(request.getTacGiaIds());
+        sach.setTacGiaSet(new HashSet<>(tacGiaSet));
 
         return sachMapper.toSachResponse(sachRepository.save(sach));
     }
