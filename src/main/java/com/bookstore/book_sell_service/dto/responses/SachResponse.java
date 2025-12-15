@@ -27,7 +27,7 @@ public class SachResponse {
     private LoaiSach loaiSach;
     private NhaXuatBan nhaXuatBan;
     private Set<TacGia> tacGiaSet;
-    private List<HinhAnh> hinhAnhList;
+    private List<String> hinhAnhs;
     private Long soLuotDG;
     private Float avgSao;
 
