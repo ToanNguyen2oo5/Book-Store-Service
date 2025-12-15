@@ -31,5 +31,10 @@ public interface DanhGiaRepository extends JpaRepository<DanhGia,Long> {
     )
     List<DanhGiaResponse> findALLDanhGiaByMaSach(@Param("maSach") Long maSach);
 
+    @Query("SELECT COUNT(bl.maDanhGia) FROM DanhGia bl  WHERE bl.sach.maSach = :maSach")
+    Long tongSoDanhGiaOfSach (@Param("maSach") Long maSach);
+
+    @Query("SELECT SUM(bl.soSao) FROM DanhGia bl WHERE bl.sach.maSach = :maSach")
+    Long tongSoSaoOfSach (@Param("maSach") Long maSach);
 
 }

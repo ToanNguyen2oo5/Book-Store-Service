@@ -32,16 +32,12 @@ public class DanhGiaService {
     KhachHangRepository khachHangRepository;
     DanhGiaRepository danhGiaRepository;
     SachRepository sachRepository;
-
+    AuthenticationService authenticationService;
     @PreAuthorize("isAuthenticated()")
     public DanhGia createDanhGia(DanhGiaRequest danhGiaRequest){
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        KhachHang khachHang = authenticationService.khachHang();
 
-        String userName =  authentication.getName();
-
-        KhachHang khachHang = khachHangRepository.findByUserName(userName)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Sach sach = sachRepository.findById(danhGiaRequest.getMaSach())
                 .orElseThrow(() -> new RuntimeException("Khong tim thay sach"));

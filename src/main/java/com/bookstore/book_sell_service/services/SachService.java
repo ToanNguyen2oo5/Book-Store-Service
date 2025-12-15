@@ -9,10 +9,7 @@ import com.bookstore.book_sell_service.entity.Sach;
 import com.bookstore.book_sell_service.entity.TacGia;
 import com.bookstore.book_sell_service.mapper.SachMapper;
 import com.bookstore.book_sell_service.mapper.TacGiaMapper;
-import com.bookstore.book_sell_service.repositories.NhaXuatBanRepository;
-import com.bookstore.book_sell_service.repositories.SachRepository;
-import com.bookstore.book_sell_service.repositories.TacGiaRepository;
-import com.bookstore.book_sell_service.repositories.TheLoaiRepository;
+import com.bookstore.book_sell_service.repositories.*;
 import com.bookstore.book_sell_service.specification.SachSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +35,7 @@ public class SachService {
     TheLoaiRepository theLoaiRepository;
     NhaXuatBanRepository nhaXuatBanRepository;
     SearchSyncService searchSyncService;
-
+    DanhGiaRepository danhGiaRepository;
     @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public SachResponse createSach(SachCreationalRequest request){
         if(sachRepository.existsByTenSach(request.getTenSach())){
@@ -82,8 +79,15 @@ public class SachService {
 
 
     public SachResponse getSach (@PathVariable  Long maSach){
-        return sachMapper.toSachResponse(sachRepository.findById(maSach)
+        SachResponse sachResponse =  sachMapper.toSachResponse(sachRepository.findById(maSach)
                 .orElseThrow(()->new RuntimeException("book not found")));
+        Long sumDG = danhGiaRepository.tongSoDanhGiaOfSach(maSach);
+        sachResponse.setSoLuotDG(sumDG);
+        if (sumDG > 0 ){
+            Float avgSao = (float) danhGiaRepository.tongSoSaoOfSach(maSach)/ sumDG;
+            sachResponse.setAvgSao(avgSao);
+        }
+       return sachResponse;
     }
 
     public SachResponse updateSach(SachUpdateRequest request, Long maSach){
@@ -115,7 +119,18 @@ public class SachService {
 
         // Convert list Entity sang list Response bằng Mapper
         return sachList.stream()
-                .map(sachMapper::toSachResponse)
+                .map( sach -> {
+                    SachResponse res = sachMapper.toSachResponse(sach);
+                    Long sumDG = danhGiaRepository.tongSoDanhGiaOfSach(sach.getMaSach());
+                    res.setSoLuotDG(sumDG);
+                    if (sumDG > 0 ){
+                        Float avgSao = (float) danhGiaRepository.tongSoSaoOfSach(sach.getMaSach())/ sumDG;
+                        res.setAvgSao(avgSao);
+                    }
+                    return  res;
+                        }
+
+                )
                 .collect(Collectors.toList());
     }
 }
