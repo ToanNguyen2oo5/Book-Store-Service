@@ -190,6 +190,7 @@ public class DonHangService {
     //@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void updateTrangThai(UpdateTrangThai updateTrangThai)
     {
+
         NhanVien nhanVien = authenticationService.nhanVien();
 
         DonHang donHang =  donHangRepository.findById(updateTrangThai.getMaDonHang())
@@ -198,6 +199,21 @@ public class DonHangService {
         TrangThai tt = TrangThai.valueOf(updateTrangThai.getTrangThai());
         donHang.setTrangThai(tt.getMoTa());
         donHang.setNhanVien(nhanVien);
+
+        donHangRepository.save(donHang);
+    }
+
+    public void updateTrangThaiKH(UpdateTrangThai updateTrangThai)
+    {
+
+        KhachHang khachHang = authenticationService.khachHang();
+
+        DonHang donHang =  donHangRepository.findById(updateTrangThai.getMaDonHang())
+                .orElseThrow(() -> new RuntimeException("Ko tim thay don hang"));
+
+        TrangThai tt = TrangThai.valueOf(updateTrangThai.getTrangThai());
+        donHang.setTrangThai(tt.getMoTa());
+//        donHang.setNhanVien(nhanVien);
 
         donHangRepository.save(donHang);
     }

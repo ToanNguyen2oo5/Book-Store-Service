@@ -70,9 +70,11 @@ public class SachService {
 
     // get all sach theo khoang gia hoac sap xep theo gia giam dan hay tang dan
 
-    public List<Sach> getAllSachsByPrice(SachFilterRequest request){
-        return sachRepository.findAll
+    public List<SachResponse> getAllSachsByPrice(SachFilterRequest request){
+        List<Sach> sachList = sachRepository.findAll
                 (SachSpecification.filterByPrice(request.getMinPrice(),request.getMaxPrice(),request.getOrderBy(),request.getOrder()));
+
+        return sachMapper.toListSachResponse(sachList);
     }
 
 

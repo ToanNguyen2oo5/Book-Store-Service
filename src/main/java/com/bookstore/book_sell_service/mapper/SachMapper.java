@@ -8,10 +8,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface SachMapper {
   //  @Mapping(target = "tacGiaSet",source = "tacGiaSet")
     SachResponse toSachResponse(Sach sach);
     Sach toSach(SachCreationalRequest request);
     void updateSach(@MappingTarget Sach sach,SachUpdateRequest request);
+    List<SachResponse> toListSachResponse (List<Sach>sach);
 }

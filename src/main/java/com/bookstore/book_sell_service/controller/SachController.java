@@ -44,9 +44,9 @@ public class SachController {
     }
 
     @PostMapping ("/request-sach")
-    public ApiResponse<List<Sach>> getAllSachsByPrice(@RequestBody SachFilterRequest request){
-        List<Sach> sachList = sachService.getAllSachsByPrice(request);
-        return ApiResponse.<List<Sach>>builder()
+    public ApiResponse<List<SachResponse>> getAllSachsByPrice(@RequestBody SachFilterRequest request){
+        List<SachResponse> sachList = sachService.getAllSachsByPrice(request);
+        return ApiResponse.<List<SachResponse>>builder()
                 .message("Lay thanh cong")
                 .result(sachList)
                 .build();

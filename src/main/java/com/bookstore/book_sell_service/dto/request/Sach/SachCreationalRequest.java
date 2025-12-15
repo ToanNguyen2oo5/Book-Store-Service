@@ -27,5 +27,6 @@ public class SachCreationalRequest {
     private Set<Long> tacGiaIds;
     private LoaiSach loaiSach;
     private NhaXuatBan nhaXuatBan;
+
     //private List<HinhAnh> hinhAnhList;
 }

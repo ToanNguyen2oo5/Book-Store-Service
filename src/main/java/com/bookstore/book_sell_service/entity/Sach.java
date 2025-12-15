@@ -47,6 +47,7 @@ public class Sach {
     private List<HinhAnh> hinhAnhList;
 
     @OneToMany(mappedBy = "sach")
+    @JsonManagedReference(value = "sach-chitietGH")
     private List<ChiTietGioHang> chiTietGioHangList;
 
     @OneToMany(mappedBy = "sach")

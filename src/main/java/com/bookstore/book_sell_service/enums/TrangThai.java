@@ -8,17 +8,18 @@ import java.util.Map;
 
 @Getter
 public enum TrangThai {
-    CHO_XAC_NHAN("Chờ xác nhận"),
-    DA_XAC_NHAN("Đã xác nhận"),
-    DANG_CHUAN_BI("Đang chuẩn bị"),
-    DANG_GIAO("Đang giao"),
-    DA_GIAO("Đã giao"),
-    DA_HUY("Đã hủy"),
-    TRA_HANG("Trả hàng");
+    CHO_XAC_NHAN(1,"Chờ xác nhận"),
+    DA_XAC_NHAN(2,"Đã xác nhận"),
+    DANG_CHUAN_BI(3,"Đang chuẩn bị"),
+    DANG_GIAO(4,"Đang giao"),
+    DA_GIAO(5,"Đã giao"),
+    DA_HUY(6,"Đã hủy"),
+    TRA_HANG(7,"Trả hàng");
 
     private final String moTa;
-
-    TrangThai(String moTa) {
+    private final int value;
+    TrangThai(int value ,String moTa) {
+        this.value = value;
         this.moTa = moTa;
     }
 
@@ -26,6 +27,8 @@ public enum TrangThai {
     public String getMoTa() {
         return moTa;
     }
+
+    public int getValue() {return value;}
 
 
 }

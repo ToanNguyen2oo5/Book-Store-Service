@@ -48,6 +48,14 @@ public class DonHangController {
                 .message("cập nhật đơn hàng thành công")
                 .build();
     }
+
+    @PutMapping("/{maDonHang}/updateTTofKH")
+    public ApiResponse<Void> updateTTofKH(@RequestBody UpdateTrangThai updateTrangThai){
+        donHangService.updateTrangThaiKH(updateTrangThai);
+        return ApiResponse.<Void>builder()
+                .message("cập nhật đơn hàng thành công")
+                .build();
+    }
     // danh sach don hang cua khach hang
     @GetMapping("/don_hang_of_KH")
     public ApiResponse<List<DHResponse>> getDHofKH(){
