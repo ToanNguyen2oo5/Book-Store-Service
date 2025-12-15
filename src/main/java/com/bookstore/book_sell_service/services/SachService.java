@@ -63,8 +63,21 @@ public class SachService {
     // Lấy tất cả sách (không lọc) và convert sang Response
     public List<SachResponse> getAllSachs() {
         // sachRepository.findAll() là hàm có sẵn của JPA
-        return sachRepository.findAll().stream()
-                .map(sachMapper::toSachResponse)
+        List<Sach> sachList = sachRepository.findAll();
+        // Convert list Entity sang list Response bằng Mapper
+        return sachList.stream()
+                .map( sach -> {
+                            SachResponse res = sachMapper.toSachResponse(sach);
+                            Long sumDG = danhGiaRepository.tongSoDanhGiaOfSach(sach.getMaSach());
+                            res.setSoLuotDG(sumDG);
+                            if (sumDG > 0 ){
+                                Float avgSao = (float) danhGiaRepository.tongSoSaoOfSach(sach.getMaSach())/ sumDG;
+                                res.setAvgSao(avgSao);
+                            }
+                            return  res;
+                        }
+
+                )
                 .collect(Collectors.toList());
     }
 
@@ -116,24 +129,13 @@ public class SachService {
         searchSyncService.deleteSachFromIndex(maSach);
     }
 
-    public List<SachResponse> getSachsByLoai(Long maLoai){
+    public List<SachResponse> getSachsByLoai(Long maLoai) {
         // Gọi repository để lấy list Entity
         List<Sach> sachList = sachRepository.findAllByLoaiSach_MaLoai(maLoai);
 
         // Convert list Entity sang list Response bằng Mapper
         return sachList.stream()
-                .map( sach -> {
-                    SachResponse res = sachMapper.toSachResponse(sach);
-                    Long sumDG = danhGiaRepository.tongSoDanhGiaOfSach(sach.getMaSach());
-                    res.setSoLuotDG(sumDG);
-                    if (sumDG > 0 ){
-                        Float avgSao = (float) danhGiaRepository.tongSoSaoOfSach(sach.getMaSach())/ sumDG;
-                        res.setAvgSao(avgSao);
-                    }
-                    return  res;
-                        }
-
-                )
+                .map(sachMapper::toSachResponse)
                 .collect(Collectors.toList());
     }
 }
