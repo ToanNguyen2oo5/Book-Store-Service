@@ -17,6 +17,7 @@ public class HinhAnh {
     @Column(name = "maHinhAnh")
     private Long maHinhAnh; // Mã hình ảnh (PK)
 
+    private String maAnh;
     // FK: MaSP (Giả định MaSP là Mã Sách, Many-to-One với Entity Book)
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
